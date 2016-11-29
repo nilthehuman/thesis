@@ -1,0 +1,431 @@
+Global Illumination Using Continuous Ray Packets
+
+This is my work-in-progress Bachelor's thesis I'm writing at the Budapest University of Technology and Economics.
+I explored a simple and intuitive way to get rid of sampling noise in path tracing rendering engines. I implemented both a standard path tracing application for reference[Retra] and one that uses the new algorithm[Silence].
+
+My advisor is Professor László Szirmay-Kalos.
+
+I apologize for the binary file format but I don't know much TeX at all so I didn't want to go that way.
+
+--- --- ---   *   --- --- ---   *   --- --- ---   *   --- --- ---
+
+Abstract
+
+Accurate and realistic lighting is a key feature of all 3D graphics applications aspiring for photorealistic rendering quality, whether games, architectural applications or offline rendering engines. In fact a rigorous physically based approach to light transport is what differentiates graphics systems that can produce correct and unbiased images from those that cannot.
+However the perfectly faithful simulation of all quanta emitted by a single lightbulb even in the narrow spectrum of visible light — in the neighbourhood of 10^20 a second or more — is known to be prohibitively expensive.
+For more than three decades global light transport, especially indirect illumination has been considered a hard problem that inspired many creative approximations to cut down on rendering time.
+Physically based techniques have nevertheless remained the undisputed best way to attack the problem. The algorithm that best embodies this approach is path tracing, a highly parallel method for finding physically plausible paths connecting camera and lightsource in the virtual scene.
+
+The chief obstacle to making path tracing practical in online applications is the inevitable presence of random noise in the output. This is usually dealt with by brute force: by sampling each surface point visible from the camera thousands of times and using numerical integration until the image has converged, although more sophisticated noise reduction techniques have been developed.
+A different way to fight noise is to make use of the spatial coherence of the scene geometry and perspective parallel rays.
+
+This thesis suggests a natural and intuitive addition to path tracing engines aimed at removing noise and/or speeding up the rendering process by exploiting spatial coherence.
+A basic demonstrative implementation is provided in C++ along with a reference path tracer program that shares some of the same code. The two solutions are compared in terms of code complexity, generality and practical performance in simple test cases.
+
+
+Összefoglaló
+
+A megvilágítás pontos és valósághű utánzása a fotorealisztikus képminőségre törekvő háromdimenziós grafikai alkalmazások egyik legfontosabb kelléke, akár játékokról, akár építészeti alkalmazásokról vagy offline renderelő motorokról legyen szó. Sőt, a fényterjedés szigorú, fizikailag megalapozott megközelítése választja el a helyes és hibátlan képszintézisre képes grafikai rendszereket azoktól, amelyek nem képesek erre.
+Az összes foton hű nyomon követése viszont még egyetlen izzólámpa által a látható tartományban kibocsátott — másodpercenként 10^20 vagy még több — fénykvantum esetén is közismerten kivitelezhetetlen.
+A fényterjedés, különösen a közvetett megvilágítás tehát bő három évtizede nehéz problémának számít, és számos szellemes közelítő eljárást ihletett, amik sokat lefaragtak a képszintézis időigényéből.
+A fizikailag megalapozott technikák ennek ellenére máig a feladat megoldásának legjobb módjai maradtak. Ezt a megközelítést a legjobban a rekurzív sugárkövetés testesíti meg: nagymértékben párhuzamosítható eljárás, ami fizikailag helyes útvonalakat keres a kamera és a fényforrások között a szimulált térben.
+
+A rekurzív sugárkövetés interaktív alkalmazásokban való használatának fő akadálya a kimenetben elkerülhetetlenül megjelenő véletlen zaj. Ezzel általában úgy birkóznak meg, hogy a kamerából látszó összes felületi pontot több ezerszer mintavételezik, és numerikus integrálással közelítik a megoldást, amíg a kép össze nem áll, bár kifinomultabb zajszűrési technikákat is kifejlesztettek már.
+A zaj kiküszöbölésére meg lehet próbálni felhasználni a színtér geometriájából és az egy pontból eredő sugarakból adódó koherenciát is.
+
+A jelen dolgozat javaslatot tesz rekurzív sugárkövető motorok olyan természetes és intuitív kiegészítésére, amely igyekszik a térbeli koherencia kiaknázásával megszüntetni a zajt és gyorsítani a képszámítási folyamatot.
+A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint egy összehasonlítási alapul szolgáló rekurzív sugárkövető program, ami részben ugyanarra a kódra épül. Összehasonlítjuk a megoldások komplexitását és néhány egyszerű tesztesetben gyakorlati teljesítményüket is.
+
+
+
+0. Introduction
+
+Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[Kajiya] in the 1980's people have been looking for efficient ways to cope with the problem.
+Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
+
+Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise and speed — two sides of the same coin — are still essentially unsolved issues in the field.
+Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
+Still the only kind of project utilizing real-time path tracing is little proof-of-concept games.[x][y][z]
+
+In the present thesis a method of speeding up path-based rendering by grouping paths together according to spatial coherence is outlined. The algorithm is in the early stages of its development but some of the results are promising.
+
+Chapter one is dedicated to a concise discussion of conventional path tracing both as the standard method for global illumination and as a reference for the new algorithm.
+Chapter two introduces the concept of "zones" and what they are used for in the new algorithm. A detailed discussion of both phases (or passes) of the algorithm is given.
+In chapter three the results, the performance and other characteristics of the new method are compared to a basic reference implementation of traditional path tracing.
+In chapter four the results and findings are assessed and reviewed.
+Chapter five outlines possible future improvements to the algorithm.
+In chapter six we look at what communities and industries could benefit from quicker rendering algorithms with less noise.
+An acknowledgement paragraph follows and then the list of references.
+An appendix of example output images is found at the end.
+
+The complete source code of both demonstrative applications is made available on GitHub. The path tracing reference program is called Retra (for "reference tracer"), the original rendering program is called Silence.
+
+*Rendering procedures converge to a certain limit point in the space of possible images. The limit depends on both the input and the algorithm's own properties. If the limit is equal to the physically expected solution for any input the algorithm is called unbiased; if not, it is biased.
+*Noise means the visible "graininess" of an output image rendered with path tracing. It is a result of random sampling every time a ray hits a diffuse surface.
+
+
+
+1. A Brief Overview of Conventional Path Tracing
+
+A quick review of the classic path tracing* algorithm follows, broken down into the following sections:
+
+1.1. The Lighting Model
+1.2. Light-Material Interaction
+1.3. The Camera Model
+1.4. The Core Algorithm
+1.5. Variants of the Core Algorithm
+1.6. Spatial Acceleration Structures
+1.7. Strategies to Reduce Noise
+1.8. Other Algorithms
+
+*There is some confusion over the name of the algorithm: some sources call it "(recursive) ray tracing" or "Whitted ray tracing", others "path tracing", yet others just "the Monte Carlo algorithm" even though that term covers a broad family of nondeterministic algorithms. We shall use the name "path tracing" throughout the thesis.
+
+1.1. The Lighting Model
+
+This section serves as an introduction to the basic properties of visible light as simulated in path tracing. We are going to take some liberties to arrive at a compact, intuitive and almost physically plausible model of light.
+
+In path tracing light is treated as a very large number of discrete infinitesimally small particles traveling through space and occasionally interacting with material surfaces or being registered by a virtual camera. It is a well known fact that physical light is not literally a stream of particles. In some cases it does behave as such, in others not at all. In fact physicists have yet to come up with an appropriate metaphor that fully and accurately captures the nature of electromagnetic radiation. Remarkably though the particle model is good enough to fool the human eye, as proven by path tracing.
+Each particle has a wavelength associated with it and a finite amount of energy which is a function of that wavelength. Exactly what values nature defines does not matter to us for reasons we will see shortly.
+
+Light particles are created by lightsources. The physical reasons of light emission do not concern us. We can just imagine that a limitless stream of particles is magically emanating from all surface points of all lightsources all the time.
+All lightsources in the model are either point lights or diffuse area lightsources. Point lights emit light uniformly in all directions. All surface points of area lightsources emit light uniformly in a hemisphere whose plane is tangential to the surface at the surface point.
+
+In vacuum and in homogeneous media light particles always travel in a straight line regardless of any nearby objects. Again, that's not true but true enough for any errors to be imperceptible under the circumstances humans are used to. The trajectory of a single undisturbed particle over time is a geometrical ray.
+We shall use the word "ray" to mean a set of n particles travelling along such a trajectory where n is a suitably large number: if we need to split a ray into k rays of equal energy we shall always assume that k mod n / n is a negligible number. In effect we treat the total energy of a ray as a continuous rather than discrete quantity, so the amount of energy in a single particle is irrelevant.
+Such rays are the central tool (and corresponding data structure) the path tracing algorithm is built upon.
+
+We imagine that all wavelengths of light travel together in a single ray no matter what happens to the ray. This is another physically inaccurate simplification. Light particles are independent of each other and when refracted on a barrier between different material media each wavelength of light reacts differently and they are scattered away from each other. Modern rendering engines use spectral path tracing[] to account for this phenomenon.
+
+Finally, in order to represent a ray's intensity across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b e [0,inf) to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
+
+We have established that when undisturbed a ray will travel along a straight line. What happens when there is something in the way?
+
+1.2. Light-Material Interaction
+
+When a particle of light collides with a physical surface a number of things can happen:
+* Absorption. The energy of particle is absorbed by the physical object.
+* Specular reflection. The particle bounces off at the same angle it arrived at, such as off a mirror.
+* Diffuse reflection. The particle bounces off at a more or less random angle.
+* Refraction. The particle penetrates the object and continues its path inside it.
+
+The portion of light that is absorbed by the surface has no further effect other than heating up the receiving object by an immeasurable amount. The other portions continue flying through the virtual world and may or may not change the picture the camera is generating in the end.
+
+Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb all of it. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.
+a different amount is absorbed of the energy of each primary color wavelength. We interpret this effect as changing the color of the ray in our model: if a ray with 
+
+Exactly what percentage of the energy per unit surface area is absorbed, reflected specularly, reflected diffusely and transmitted by refraction when light meets a certain kind of material is defined by the bidirectional reflectance distribution function (BRDF) of the given material. A BRDF is a function of the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The last term is almost universally ignored because it is considered to have an inconsequentially small effect on radiance.
+A material's BRDF is assumed not to change over time or when in motion. These are very reasonable, if not one hundred percent correct assumptions for the purposes of practical rendering.
+
+Most light bouncing around the virtual scene never makes it to the camera so its effect on the image seen by the camera is zero. Time and effort spent on tracing these rays of light is wasted.
+To counter this problem path tracing follows rays starting from the camera instead of the other way around. Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BRDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
+
+
+1.4. The Core Algorithm
+
+With that we are ready to review how classic path tracing works on a technical level.
+
+1.4.1 A Bird's Eye View
+
+for each screen pixel:
+	for 0..n:
+		shoot a ray through the pixel
+		
+	average the ray intensities
+
+1.3. Variants of the Core Algorithm
+Some obvious deficiencies of basic path tracing were soon noted and there was enough low-hanging fruit for the original algorithm to start evolving rapidly.
+ now universally used
+Another apparent problem was the fact that sending rays through the center of each screen pixel is prone to aliasing artifacts. Some researchers came up with ideas to use multiple different rays per each pixel which spawned distributed ray tracing[], while most others tried replacing the infinitesimally thin rays with shapes with positive volume. This led to beam tracing, cone tracing, pencil tracing and more.
+Yet others realized that carefully perturbing the intersection points slightly once a valid path has been found can be used to generate more valid paths and Metropolis light transport was born.
+
+1.4. Spatial Acceleration Structures
+Finding the nearest intersection of a ray with any surface in the scene is one of the most common tasks in any ray tracing engine. Naive path tracing was soon improved dramatically by including so-called acceleration structures that help reduce the number of intersection tests to be performed. By revealing what object are present in a given sector of the world not only do they make finding intersecions faster, they also help solve the hidden surface removal problem.
+This section is kept short because neither application presented in this thesis actually uses any acceleration structures (unless you count the zone trees Silence uses but most ).
+Acceleration structures are only relevant to our discussion insofar as ...
+
+The most popular acceleration structures are the following:
+* Binary space partitioning (BSP) trees recursively split the world space in two along arbitrary (normally axis-aligned) planes. Each node in the tree has zero or two children.
+* k-d (most commonly 3-d) trees are BSP trees where each subsequent level has divisions along the next world axis. Level zero is the root node, then level one splits the space along x = x0 for some suitable x0, then level two splits each half separately along some y = y0 and y = y1 into four leaves total, then level three splits each leaf again by the z coordinate and so on.
+* Octrees recursively divide the world space into eight equal parts along the planes x = (x0+x1)/2, y = (y0+y1)/2 and z = (z0+z1)/2 simultaneously where [x0, x1]x[y0, y1]x[z0, z1] is the set of points in the current node. Each node has either zero or eight children.
+* Bounding volume hierarchies take a bottom-up approach, first they wrap each individual object in a bounding box (or other bounding volume), then nearby objects are grouped together into bigger bounding boxes and so on until all of the scene geometry is enclosed in a single bounding box.
+
+All of the above are essentially space partitioning schemes that serve to organize parts of the world geometry into easy-to-manage, fast data structures. As mentioned above the demo applications use no such data structures.
+
+1.5. Strategies to Reduce Noise
+As discussed before noise reduction is one of the  Smart noise filtering algorithms in path traced images have almost grown into a field of their own recently. Successful filtering techniques deserving of mention include the following:
+* greedy error minimization in two steps[Rousselle]
+* random parameter filtering,
+* and neural networks[MLA] trained on pairs of noisy and clean renders of the same scene.
+
+1.6. Other Algorithms
+Path tracing is of course not without competition on the realistic image synthesis market. Other successful approaches to global illumination exist. Techniques that deserve mention include:
+* photon mapping[x], a two-pass algorithm that shoots light rays first and then samples their density around points visible from the camera;
+* radiosity, an old and proven approach that uses the the finite element method but works for diffuse materials only;
+* and voxel cone tracing, which divides the virtual space up into small cubes and uses a variant of ray tracing to sample it.
+
+These methods are very far removed from our immediate topic though and we shall discuss them no further.
+
+2. Introducing the New Algorithm
+
+rather than developing methods to isolate and reduce noise we can try and avoid incurring noise in the first place. The program in this thesis takes the latter approach — hence the name "Silence".
+
+Describing the low-level implementation details of the rendering program would make for a boring read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
+Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own "zone tracer" application. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
+
+The title of the thesis is something of a misnomer in that zones are only loosely related to ray packets but the method did not have a set name at the time nor did the author want to use a confusing nonsense title. Zones still resemble ray packets in that they both make use of ray coherence, all (hypothetical) rays originate at a common point and...  See section 2.2. for details.
+
+2.1. A Banal Observation
+
+The motivation for a new data structure stems from the realization that in most at least direct irradiance is "trivial" or "obvious"
+
+going to appear in the shades of red according to some well-behaved, smooth function I(p), shadows notwithstanding. Any person intuitively knows this
+
+2.2. What Are Zones?
+
+Zones are the algorithm's core data structure meant to capture the most crucial characteristics of a full bundle of light emanating from an emitter or reflector in all directions.
+Conceptually a zone represents an infinite number of light rays traveling from a given surface to other nearby surfaces or to a camera.
+
+The purposes of zones are twofold:
+First, to determine in one sweep the direct illumination of linear surfaces, e.g. the shading of the flat wall lit by a nearby light discussed in the previous section;
+and second, to establish the set of paths that eye rays can potentially take, and crucially, those they cannot, e.g. if two back-culled triangles are facing away from each other any path that would travel directly between those two triangles must be invalid.
+
+2.3. Alternatives
+
+Zones are not entirely unlike traditional 3D rendering data structures such as beams or ray packets.
+
+The model also bears a resemblance to illumination networks [Buckalew&Fussell] although it tries to reduce the number of ray-surface intersection tests even further.
+
+2.4. Overview of The Algorithm
+
+The algorithm operates in two phases:
+* phase one: building the zone forest, and
+* phase two: rasterizing zones to the screen by ray tracing.
+In phase one the algorithm extracts information from the scene about the potential future eye ray paths.
+The rendering algorithm in phase two is informed by the intelligence acquired about the scene in phase one.
+
+The bulk of the processing effort is made in phase two. Phase two typically takes several orders of magnitude longer than phase one.
+
+2.4.1. Phase One
+
+Phase one was designed to exploit spatial coherence in scenes with simple geometry and mostly diffuse surfaces.
+
+In phase one area lightsources are treated almost the same as point lights.
+
+Phase one traces infinite sets of *light* rays as opposed to *eye* rays, i.e. it traces light forward. This rare approach means we are willing to do some extra CPU work (exactly how much strongly depends on the scene being rendered) to get a complete picture of all the light transport happening in the scene. If done right forward light tracing nets us the following advantages:
++ Decoupling of light transport and camera position. A dynamic camera is not a problem, multiple cameras are cheap
++ Easy shadows, no shadow rays ("shadow zones") necessary
++ Efficient caustics
+    Surface points whence shadow rays are blocked by see-through objects are hard to deal with in path tracing. The zone tree "guides" the sampling rays through the refractive object instead of shooting rays blindly in all directions.
+
+The resulting zone tree captures virtually all light transport happening in the scene up to a given number of bounces.
+
+Another way to think about the Zone tree is as the simplest and most straightforward of all acceleration structures: all it does is describe the sets of paths that end up being valuable in the raytracing/rasterization phase.
+Tracing is then limited to only those paths that actually connect the camera with a lightsource basically leading to a particularly effective and flexible form of importance sampling.
+
+The author has tried two different rasterization strategies:
+
+1. Zone by Zone: For each Zone see if it hits the camera. If it does shoot one Ray through each pixel of the 2D bounding box of its source to determine the Zone's contribution to the color of the pixel.
+The problem with this strategy is, of course, the exponentially increasing number of Zones as one goes deeper into the trees. [...]
+
+2. Pixel by Pixel: Shoot one Ray through each pixel of the screen to see what surface it hits. Look up all the Zones emanating from that surface (bounding boxes help). Add up their contributions to the color of the pixel.
+
+The latter strategy has won in terms of performance by a wide margin. (?) It is even easier to parallelize and requires even less intersections to be calculated.
+Only the pixel by pixel strategy is used hereafter. Both strategies are still available in the codebase for experimentation.
+
+A major benefit to the zone forest in phase two is that it unambiguously "guides" the eye rays back to the corresponding light source. We don't need to work out the next surface the ray hits because we already know where the light is coming from.
+
+2.x. Technical Details and A Few Tricks
+
+2.x.y. Points of Design
+
+The author regrets sticking to the old "time.h" library for Retra because the awkwardness of clock_t in a multithreaded environment definitely outweighs any portability concerns. The far superior and more reliable "chrono" C++11 library is recommended instead.
+The author even abandoned his goal of to constrain the application to the C++98 featureset altogether at the end when he decided to use the "atomic" library for counting individual Ray instances.
+All in all we have to conclude that choosing to use old standards and libraries for increased compiler compatibility and portability is a bad idea.
+
+Both algorithms are implemented purely on the CPU. Silence is only a proof of concept: a demonstration of the algorithm's promise. In fact both the clarity of the source code and the merits of the whole zone tracing concept would have suffered from a GPU implementation.
+As Professor Szirmay-Kalos reckoned "if it's not worth doing on the CPU, it's not worth doing on the GPU either". Since the algorithm is easy to parallelize we can expect fair results from an eventual GPU "zone tracer" as well.
+
+C++ was chosen as the language of implementation because it has long been the lingua franca of the computer graphics community as well as a language almost universally understood among working software developers. It also compiles to relatively efficient executables.
+
+The featuresets of Retra and Silence are kept extremely small on purpose to highlight their differences while keeping them directly comparable.
+
+Silence is still in alpha status. The author apologizes for any bugs that inevitably ended up in the codebase and is counting on the computer graphics community to review the source and point out his most glaring mistakes and perhaps offer advice on how to build up the implementation more skillfully the next time around.
+
+On the implementation level a zone is a class made up of the following components:
+* A light beam, which in turn includes
+  + The apex. ...If a diffuse light were replaced by a point light this is where it should be placed.
+  + ...
+  + The edge list. ...An empty edge list is taken to mean "radiates indiscriminately in all directions".
+* Zero or more shadow beams
+* A reference to the object (or vacuum) it's traveling inside
+
+2.x.y. Intensity Distribution Functions Used
+
+ In a serious implementation a more rigorous scientific approach is needed.
+
+When viewed from a large distance for all intents and purposes the triangular emitter works like a point light. We need a function that transitions smoothly from ... to point light behaviour.
+
+The Material Model
+
+
+Adhering to Object-Oriented principles was of relative rather than absolute importance to the project. The author needed to get Silence working quickly to meet the deadline.
+
+Input-Specific Optimizations
+
+Some implementation nuances were tailored a little bit to the particular kind of scenes used in testing. Consider the Cornell box scene: the side walls are at a right angle to the lightsource. Using 
+I(alpha) = I0 * sin(alpha) * cos^3(alpha) / d^2
+where alpha is the angle between 
+I is the light intensity arriving to the point on the wall at angle alpha,
+I0 is the initial 
+
+Recruiting some help from WolframAlpha reveals that this function peaks at alpha=pi/6, so that is the angle the best lit point is going to be found at.
+
+Another example of molding the program into what works in practice is "reflect-to-diffuse truncation". The effect of light reflected off a mirror or metallic object to a diffuse surface is usually barely visible to the naked eye. During phase one if a diffuse surface is hit after a reflecting surface, Silence takes to liberty to stop expanding the tree after that node altogether.
+The rare cases where a reflective surface does change the illumination of a diffuse surface in a visible way are thus handled incorrectly, or more precisely, not handled at all. Metal rings placed on a flat diffuse surface are a famous example of this effect.
+Note that no truncation is allowed after refractive surfaces because they often produce very apparent caustics.
+
+The complications arising from refractive objects being inside one another (such as a glass ball in a tank of water) are sidestepped entirely in Silence by disallowing overlapping transparent objects.
+
+Whether or not minor hacks like these are appropriate for the scene being processed could be decided algorithmically in a smarter, more advanced implementation.
+
+Classes and Their Responsibilities
+No serious software engineering thesis can be complete without a dull discussion of the concrete class hierarchy used in the applications.
+Since it adds virtually nothing of value to the rest of the thesis the reader may safely skip this part entirely unless they are here for some mediocre Object-Oriented software design.
+
+2.x+1.
+
+A Summary of the Advantages and Drawbacks of The New Approach
+For
++ Noise-free rendering
++ Decoupling of light transport and camera position
++ Multiple cameras are cheaper
++ Degrades gracefully
+    Under tight time constraints you can always fall back to rendering just the zones near the top of each tree.
++ Clean and natural separation of light tree levels or "bounces" -> easy to test and debug
++ Versatile "acceleration structure", can be used with different algorithms
+Against
+- Marginal extra coding effort
+- Some optimizations will compromise unbiased results (see Reflect-to-Diffuse Truncation)
+
+
+3. Comparison
+
+3.1. General Features
+Naive Path Tracing | Path Tracing with Zones
+ unbiased  potentially unbiased
+codebase metrics --
+LOC
+Cyclomatic complexity
+
+3.2. Empirical Results
+
+On a logarithmic scale the new method appears to almost split the difference in terms of performance between direct rasterization and vanilla path tracing. "Zone tracing" is about two orders of magnitude faster than plain path tracing depending on the exact scene being rendered.
+This chapter includes some practical performance measurements done with both Retra and Silence side by side. Test cases that took a very long time were run once while easier cases were repeated three times each and the results averaged. All measurements were done on a laptop with the following specs:
+Processor: Core i5-5200U running at 2.2 GHz (hyperthreading enabled)
+Memory: 4 GB of DDR3 RAM
+Display: 15.6" LED monitor, 1366x768 pixels with 466:1 contrast
+Operating System: Debian GNU/Linux 8 "Jessie"
+
+The reason for including display specs is the fact that stochastic noise in path traced output makes the two algorithms non-trivial to compare. The author used his best judgement to determine when an image has converged enough to be very hard to tell from the actual solution at no zoom.
+
+The test cases are small, closed scenes with simple geometry described in human-readable JSON format. A built-in scene file parser is included with both rendering programs.
+
+The difference in efficiency is more apparent when we allow each program only a limited number of rays to work with (samples per pixel is not applicable to Silence).
+The following images were produced using a maximum of one million rays each (note that this
+does not include shadow rays: Retra is allowed to sample lights for free and its
+SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
+
+Silence is able to make better use of the drastically limited resources because its sampling method is much
+less random. The zone tree guides the rays towards the areas where most of the light is actually coming from.
+Retra also took more time than Silence to render the scenes.
+
+The bulk of the rendering time is still spent on finding ray-surface intersections.
+
+Typical global illumination effects such as color bleeding and soft shadows are visible in the test case images.
+
+A miniature animation subsystem is also included for demonstration purposes. Basic trajectories or "motions" for in-worlds objects are defined in a JSON file similar to scene descriptions (see scenes/dancingLights_motions.json for an easy example).
+
+4. Assessment of Work and Results
+
+Keeping in mind that Silence is an extremely crude and primitive first attempt at harnessing the model's power it is safe to expect more algorithmic and performance gains from a more sophisticated and well thought-out implementation.
+
+The actual performance increase from the new method fell remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude).
+
+We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
+
+The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
+
+5. Possible Further Improvements
+
+Silence, a basic toy implementation of the new method comes with a lengthy todo list.
+
+* Use smart interpolation across each surface to drastically reduce number of rays needed for rasterization.
+* Gather more geometric information during the tree building phase, e.g. detect impossible paths between entire groups of surfaces.
+* Handle true general BRDF's.
+* Handle more complex geometry (although the algorithm may turn out to be ill-suited for this).
+* Develop smarter ways to discard zones.
+    Weak and unimportant zones that contribute little to the final image soak up most of the processing effort. Static limit cutoff is too primitive to combat this issue effectively.
+* Are pivots even necessary?
+    In retrospect it seems that pivot rays are a rather useless component of zones. We can go ahead and use pivotless zones instead.
+* Import/Export Zone trees to/from file.
+    Large static scenes may benefit from this.
+* Develop a GPU accelerated version (expected to be several orders of magnitude faster).
+
+6. Applicability
+
+Path tracing and related methods have traditionally been important in a number of fields. Novel algorithms are often incorporated into the tools used in these fields making life easier for both professionals and hobbyists.
+This chapter explores some possible use cases for 
+
+Acoustic Modeling
+Beam tracing[see ...] solutions have been used to model the behaviour of sound waves in closed spaces for years.
+A variant of zone tracing could provide an attractive, low-cost alternative.
+
+Architecture
+The new method could prove extremely useful for architects, lighting and interior designers 
+With near real-time noiseless path tracing professionals would be able to demonstrate architectural environment models to costumers with a more interactive and lifelike experience.
+Low polygon count indirectly-lit interiors like this one[Jensen!] are good examples of where the new algorithm could shine.
+
+Art
+As with most image synthesis algorithms it only takes a few simple changes to the algorithm to get exciting freestyle artistic tools. By virtue of its simplicity the model lends itself well to creative experimentation to achieve surreal rather than realistic effects.
+A few ideas:
+* Scrap occlusion detection to create an eerie, dreamlike effect.
+* Twist or bend Zones in space after building the tree for an Alice in Wonderland feel.
+* Use Distributions to shift the color of Zones instead of determining intensity during rasterization.
+
+Cinema
+The movie industry is another area where where realistic 3D rendering is a must. At the same time iteration time is also crucial and artists usually benefit from faster algorithms.
+Algorithms like zone tracing can help reduce iteration time from amateur animation up to high-budget movies.
+
+The Demoscene
+The demoscene is a worldwide community of computer graphics enthusiasts dedicated to making "demos" that push the boundaries of CG algorithms.
+The challenge is to create an executable of tightly constrained size that generates and plays high quality video and audio real-time.
+A heavily space-optimized variant of zone tracing could serve as a valuable tool in creating impressive demos.
+
+Games
+Present day hardware technology is still at least an order of magnitude of speed away from making traditional path tracing practical in video games.[Carmack 2013]
+The new algorithm (or a convenient variant thereof) could help game delevopers achieve real-time realistic global illumination on strong hardware.
+
+Mobile Platforms
+3D graphics engines for tablet computers and smartphones already exist. In the coming years as mobile hardware improves realistic rendering on mobile devices may become an exciting new research area.
+Zones may be a worthwhile addition to rendering systems running on such limited hardware.
+
+7. Acknowledgements
+The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos for his valuable remarks and to his own family and significant other for their patience and understanding in the final stages of development and writing.
+
+8. References
+[1] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
+[2] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
+[] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
+[] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
+[]Henrik Wann Jensen: Global Illumination using Photon Maps  http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
+[Buckalew & Fussell] Illumination Networks: Fast Realistic Rendering with General Reflectance Functions  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
+[] https://en.wikipedia.org/wiki/Spectral_rendering
+[] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
+[] https://en.wikipedia.org/wiki/Saturable_absorption
+[n] https://home.otoy.com/render/brigade/
+[x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
+[y] L. Dymchenko: AntiPlanet http://www.virtualray.ru/eng/download.html
+[z] E. Biddulph: Quake 2 Realtime GPU Pathtracing http://amietia.com/q2pt.html
+
+9. Appendix
