@@ -36,7 +36,7 @@ A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint
 Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[Kajiya] in the 1980's people have been looking for efficient ways to cope with the problem.
 Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
 
-Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise and speed — two sides of the same coin — are still essentially unsolved issues in the field.
+Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise and speed — two sides of the same coin — remain essentially unsolved issues in the field.
 Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
 Still the only kind of project utilizing real-time path tracing is little proof-of-concept games.[x][y][z]
 
@@ -97,21 +97,29 @@ We have established that when undisturbed a ray will travel along a straight lin
 
 When a particle of light collides with a physical surface a number of things can happen:
 * Absorption. The energy of particle is absorbed by the physical object.
-* Specular reflection. The particle bounces off at the same angle it arrived at, such as off a mirror.
+* Specular reflection. The particle bounces off at more or less the same angle it arrived at, such as off a mirror.
 * Diffuse reflection. The particle bounces off at a more or less random angle.
 * Refraction. The particle penetrates the object and continues its path inside it.
 
 The portion of light that is absorbed by the surface has no further effect other than heating up the receiving object by an immeasurable amount. The other portions continue flying through the virtual world and may or may not change the picture the camera is generating in the end.
 
+Note that real physical materials usually do not behave as ideal specular reflectors or ideal (Lambertian) diffuse reflectors.
 Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb all of it. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.
 a different amount is absorbed of the energy of each primary color wavelength. We interpret this effect as changing the color of the ray in our model: if a ray with 
 
-Exactly what percentage of the energy per unit surface area is absorbed, reflected specularly, reflected diffusely and transmitted by refraction when light meets a certain kind of material is defined by the bidirectional reflectance distribution function (BRDF) of the given material. A BRDF is a function of the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The last term is almost universally ignored because it is considered to have an inconsequentially small effect on radiance.
+Exactly what percentage of the energy per unit surface area is reflected or transmitted in a certain direction when light meets a certain kind of material is defined by the bidirectional reflectance distribution function (BRDF) of that material. A BRDF is a function of the contact point, the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The first and last terms are almost universally ignored. The first one because most of the time simulated objects are, or can be broken up into, homogeneous entities. The last one because it is considered to have an inconsequential effect on radiance.
+[ BRDF( x, wi, wo
 A material's BRDF is assumed not to change over time or when in motion. These are very reasonable, if not one hundred percent correct assumptions for the purposes of practical rendering.
 
 Most light bouncing around the virtual scene never makes it to the camera so its effect on the image seen by the camera is zero. Time and effort spent on tracing these rays of light is wasted.
 To counter this problem path tracing follows rays starting from the camera instead of the other way around. Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BRDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
+So physically ... Now if the operation used to incorporate the color of a surface into the color of the ray is commutative we should get the same end result.
+Indeed it is very easy to see that
+ray.paint( (r1, g1, b1) ).paint( (r2, g2, b2) ) == ray.paint( (r2, g2, b2) ).paint( (r1, g1, b1) )
 
+1.3. The Camera Model
+
+There is no reason to complicate the camera model especially since the simulation of the optical properties of cameras is not the focus of our discussion. We shall rely on the simplest possible choice: a pinhole camera model.
 
 1.4. The Core Algorithm
 
@@ -119,15 +127,38 @@ With that we are ready to review how classic path tracing works on a technical l
 
 1.4.1 A Bird's Eye View
 
+The following pseudocode procedure describes the basic path tracing algorithm on a very abstract level.
+
 for each screen pixel:
-	for 0..n:
-		shoot a ray through the pixel
-		
-	average the ray intensities
+	for [0,s):
+		shoot a ray from the viewpoint through the pixel
+		while 0 < ray.intensity and ray.depth <= d:
+			find nearest intersection with world geometry
+			if light hit:
+				incorporate color of light
+				return ray.color
+			if no surface hit:
+				incorporate color of sky
+				return ray.color
+			incorporate color of intersected surface
+			if intersected surface...
+				reflects diffusely:
+					continue in random direction
+				reflects specularly:
+					continue in mirror direction
+				reflects specularly:
+					continue in mirror direction
+			ray.depth++
+		return (0, 0, 0)
+	average the resulting ray intensities
+
+(The constants s and d are chosen by the user.)
+This high-level overview already reveals a few interesting properties. The operations in the innermost loop need to be performed O(psd) times where p is the number of pixels in the chosen screen resolution, s is the number of samples per pixel and d is the maximum path depth allowed. Intersection detection is the only task in the loop that requires any kind of serious work so we expect it to be a performance bottleneck in the algorithm, and indeed it is.
+Also note that absorption is accounted for implicitly by incorporating the color of each surface hit.
 
 1.3. Variants of the Core Algorithm
 Some obvious deficiencies of basic path tracing were soon noted and there was enough low-hanging fruit for the original algorithm to start evolving rapidly.
- now universally used
+The perceptive reader will have noticed that most of the rays are actually wasted because they never reach a lightsource. now universally used
 Another apparent problem was the fact that sending rays through the center of each screen pixel is prone to aliasing artifacts. Some researchers came up with ideas to use multiple different rays per each pixel which spawned distributed ray tracing[], while most others tried replacing the infinitesimally thin rays with shapes with positive volume. This led to beam tracing, cone tracing, pencil tracing and more.
 Yet others realized that carefully perturbing the intersection points slightly once a valid path has been found can be used to generate more valid paths and Metropolis light transport was born.
 
@@ -347,6 +378,8 @@ The actual performance increase from the new method fell remarkably close to wha
 We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
 
 The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
+
+Some ubiquitous topics were surprisingly hard to find solid sources on. One would expect seminal papers to turn up on the first page of a simple Google search for terms like "Russian roulette". One would be wrong.
 
 5. Possible Further Improvements
 
