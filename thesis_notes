@@ -4,8 +4,8 @@ Global Illumination Using Continuous Ray Packets
 
 Abstract
 
-Accurate and realistic lighting is a key feature of all 3D graphics applications aspiring for photorealistic rendering quality, whether games, architectural applications or offline rendering engines. In fact a rigorous physically based approach to light transport is what differentiates graphics systems that can produce correct and unbiased images from those that cannot.
-However the perfectly faithful simulation of all quanta emitted by a single lightbulb even in the narrow spectrum of visible light — in the neighbourhood of 10^20 a second or more — is known to be prohibitively expensive.
+Accurate and realistic lighting is a key requirement for all 3D graphics applications aspiring for photorealistic rendering quality, whether games, architectural applications or offline rendering engines. In fact a rigorous physically based approach to light transport is what differentiates graphics systems that can produce correct and unbiased images from those that cannot.
+However the perfectly faithful simulation of all quanta emitted by a single lightbulb even in the narrow spectrum of visible light — in the neighbourhood of 10^20 per second or more — is known to be prohibitively expensive.
 For more than three decades global light transport, especially indirect illumination has been considered a hard problem that inspired many creative approximations to cut down on rendering time.
 Physically based techniques have nevertheless remained the undisputed best way to attack the problem. The algorithm that best embodies this approach is path tracing, a highly parallel method for finding physically plausible paths connecting camera and lightsource in the virtual scene.
 
@@ -27,7 +27,7 @@ A rekurzív sugárkövetés interaktív alkalmazásokban való használatának f
 A zaj kiküszöbölésére meg lehet próbálni felhasználni a színtér geometriájából és az egy pontból eredő sugarakból adódó koherenciát is.
 
 A jelen dolgozat javaslatot tesz rekurzív sugárkövető motorok olyan természetes és intuitív kiegészítésére, amely igyekszik a térbeli koherencia kiaknázásával megszüntetni a zajt és gyorsítani a képszámítási folyamatot.
-A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint egy összehasonlítási alapul szolgáló rekurzív sugárkövető program, ami részben ugyanarra a kódra épül. Összehasonlítjuk a megoldások komplexitását és néhány egyszerű tesztesetben gyakorlati teljesítményüket is.
+A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint egy összehasonlítási alapul szolgáló rekurzív sugárkövető program, ami részben ugyanarra a kódra épül. Összehasonlítjuk a megoldások komplexitását, általánosságát és néhány egyszerű tesztesetben gyakorlati teljesítményüket is.
 
 
 
