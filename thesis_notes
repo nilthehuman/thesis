@@ -18,7 +18,7 @@ A basic demonstrative implementation is provided in C++ along with a reference p
 
 Összefoglaló
 
-A megvilágítás pontos és valósághű utánzása a fotorealisztikus képminőségre törekvő háromdimenziós grafikai alkalmazások egyik legfontosabb kelléke, akár játékokról, akár építészeti alkalmazásokról vagy offline renderelő motorokról legyen szó. Sőt, a fényterjedés szigorú, fizikailag megalapozott megközelítése választja el a helyes és hibátlan képszintézisre képes grafikai rendszereket azoktól, amelyek nem képesek erre.
+A megvilágítás pontos és valósághű utánzása a fotorealisztikus képminőségre törekvő háromdimenziós grafikai alkalmazások egyik legfontosabb kelléke, akár játékokról, akár építészeti alkalmazásokról vagy offline renderelő motorokról van szó. Sőt, a fényterjedés szigorú, fizikailag megalapozott megközelítése választja el a helyes és hibátlan képszintézisre képes grafikai rendszereket azoktól, amelyek nem képesek erre.
 Az összes foton hű nyomon követése viszont még egyetlen izzólámpa által a látható tartományban kibocsátott — másodpercenként 10^20 vagy még több — fénykvantum esetén is közismerten kivitelezhetetlen.
 A fényterjedés, különösen a közvetett megvilágítás tehát bő három évtizede nehéz problémának számít, és számos szellemes közelítő eljárást ihletett, amik sokat lefaragtak a képszintézis időigényéből.
 A fizikailag megalapozott technikák ennek ellenére máig a feladat megoldásának legjobb módjai maradtak. Ezt a megközelítést a legjobban a rekurzív sugárkövetés testesíti meg: nagymértékben párhuzamosítható eljárás, ami fizikailag helyes útvonalakat keres a kamera és a fényforrások között a szimulált térben.
