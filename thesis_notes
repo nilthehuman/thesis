@@ -266,12 +266,6 @@ A major benefit to the zone forest in phase two is that it unambiguously "guides
 
 2.x. Technical Details and A Few Tricks
 
-2.x.y. Points of Design
-
-The author regrets sticking to the old "time.h" library for Retra because the awkwardness of clock_t in a multithreaded environment definitely outweighs any portability concerns. The far superior and more reliable "chrono" C++11 library is recommended instead.
-The author even abandoned his goal of to constrain the application to the C++98 featureset altogether at the end when he decided to use the "atomic" library for counting individual Ray instances.
-All in all we have to conclude that choosing to use old standards and libraries for increased compiler compatibility and portability is a bad idea.
-
 Both algorithms are implemented purely on the CPU. Silence is only a proof of concept: a demonstration of the algorithm's promise. In fact both the clarity of the source code and the merits of the whole zone tracing concept would have suffered from a GPU implementation.
 As Professor Szirmay-Kalos reckoned "if it's not worth doing on the CPU, it's not worth doing on the GPU either". Since the algorithm is easy to parallelize we can expect fair results from an eventual GPU "zone tracer" as well.
 
@@ -297,8 +291,7 @@ When viewed from a large distance for all intents and purposes the triangular em
 
 The Material Model
 
-
-Adhering to Object-Oriented principles was of relative rather than absolute importance to the project. The author needed to get Silence working quickly to meet the deadline.
+combination of ideal BRDF's
 
 Input-Specific Optimizations
 
@@ -360,16 +353,14 @@ The reason for including display specs is the fact that stochastic noise in path
 
 The test cases are small, closed scenes with simple geometry described in human-readable JSON format. A built-in scene file parser is included with both rendering programs.
 
-The difference in efficiency is more apparent when we allow each program only a limited number of rays to work with (samples per pixel is not applicable to Silence).
-The following images were produced using a maximum of one million rays each (note that this
-does not include shadow rays: Retra is allowed to sample lights for free and its
-SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
+[ picture ]  [ picture ]
 
-Silence is able to make better use of the drastically limited resources because its sampling method is much
-less random. The zone tree guides the rays towards the areas where most of the light is actually coming from.
-Retra also took more time than Silence to render the scenes.
+The difference in efficiency is more apparent when we allow each program only a limited number of paths to work with ("samples per pixel" is not really applicable to Silence). The following images were produced using a maximum of one million individual paths each (note that this does not include shadow rays: Retra is allowed to sample lights for free and its SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
 
-The bulk of the rendering time is still spent on finding ray-surface intersections.
+[ picture ]  [ picture ]
+
+Silence is able to make better use of the drastically limited resources because its sampling method is much less random. The zone tree guides the rays towards the areas where most of the light is actually coming from.
+Retra also took more time than Silence to render the scenes. (true?)
 
 Typical global illumination effects such as color bleeding and soft shadows are visible in the test case images.
 
@@ -377,13 +368,27 @@ A miniature animation subsystem is also included for demonstration purposes. Bas
 
 4. Assessment of Work and Results
 
-Keeping in mind that Silence is an extremely crude and primitive first attempt at harnessing the model's power it is safe to expect more algorithmic and performance gains from a more sophisticated and well thought-out implementation.
+4.1. Points of Design
+
+The author made a decision early on during the development of Retra to stick to the old C++98 standard, a choice he now regrets. For instance the awkwardness of the old "time.h" library in a multithreaded environment definitely outweighs any portability concerns. The far superior and more reliable "chrono" C++11 library is recommended instead.
+The author even abandoned his goal to constrain the application to the C++98 featureset altogether in the end when he decided to use the "atomic" library for counting individual paths.
+All in all we have to conclude that choosing to use old standards and libraries for increased compiler compatibility and portability is a bad idea.
+
+With this in mind Silence was developed as a C++11 application from the beginning. The author experienced no issues whatsoever with the C++11 support of the popular g++ compiler (part of the GNU Compiler Collection).
+
+Adhering to Object-Oriented principles was of relative rather than absolute importance to the project, but not at all due to lack of conviction that a clean and rigorously organized codebase is just as important as results. The author needed to get Silence working quickly to meet the deadline.
+
+The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
+
+4.2. Findings
 
 The actual performance increase from the new method fell remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude).
 
-We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
+Keeping in mind that Silence is an extremely crude and primitive first attempt at harnessing the model's power it is safe to expect more algorithmic and performance gains from a more sophisticated and well thought-out implementation.
 
-The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
+Quite naturally the bulk of the rendering time is still spent on finding ray-surface intersections.
+
+We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
 
 Some ubiquitous topics were surprisingly hard to find solid sources on. One would expect seminal papers to turn up on the first page of a simple Google search for terms like "Russian roulette". One would be wrong.
 
