@@ -475,8 +475,9 @@ Zones may be a worthwhile addition to rendering systems running on such limited 
 The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos for his valuable remarks and to his own family and significant other for their patience and understanding in the final stages of development and writing.
 
 8. References
-[1] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
-[2] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[1] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
+[2] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
+[3] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
 [] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
 [] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
 [] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
@@ -486,6 +487,9 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
 [] https://en.wikipedia.org/wiki/Saturable_absorption
 [] https://en.wikipedia.org/wiki/Snell%27s_law
+[] T. Möller, B. Trumbore: Fast, Minimum Storage Ray/Triangle Intersection, 1997. (Journal of Graphics Tools)
+[] https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
+[] http://stats.stackexchange.com/questions/7977/how-to-generate-uniformly-distributed-points-on-the-surface-of-the-3-d-unit-sphere
 [n] https://home.otoy.com/render/brigade/
 [s] http://www.hakenberg.de/diffgeo/special_relativity.htm
 [x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
