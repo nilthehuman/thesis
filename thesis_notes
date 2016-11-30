@@ -104,25 +104,32 @@ When a particle of light collides with a physical surface a number of things can
 * Diffuse reflection. The particle bounces off at a more or less random angle.
 * Refraction. The particle penetrates the object and continues its path inside it at an angle determined by refractive indices.[Snell]
 
+It is important to note that light-material interaction is a stochastic process. What a concrete particle will do after hitting a concrete surface any given time cannot be known in advance. The best we can do is to assign probabilities to each outcome. The probabilities will depend on the characteristics of the exact material in question.
+In the previous section we made the assumption that a ray contains so many particles that it does not matter there is a finite number of them. Relying on the exact same assumption we can say that a surface actually absorbs, reflects and transmits continuous fractions of a ray's energy. Then, conveniently, the factor by which each kind of interaction reduces the color intensity of a ray will be equal to the probability of that interaction (ignoring the effect of the color of the surface).
+
 The portion of light that is absorbed by the surface has no further effect other than heating up the receiving object by an immeasurable amount. The other portions continue flying through the virtual world and may or may not change the picture the camera is generating in the end.
 
 Note that real physical materials usually do not behave as ideal specular reflectors or ideal (Lambertian) diffuse reflectors.
 Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb all of it. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.
-a different amount is absorbed of the energy of each primary color wavelength. We interpret this effect as changing the color of the ray in our model: if a ray with 
+a different amount is absorbed of the energy of each primary color wavelength. We interpret this effect as changing the color of the ray in our model: we define a method to "incorporate" the effect of the surface into the color of the ray.
+paint : RxRxR -> RxRxR -> RxRxR
+paint( color, color' ) = (color.r * color'.r, color.g * color'.g, color.b * color'.b)
+If for example a ray of color (r, g, b) encounters a surface that reflects all of red, half of green and none of blue particles the reflected ray shall have color (r, 0.5*g, 0).
 
 Exactly what percentage of the energy per unit surface area is reflected in a certain direction when light meets a certain kind of material is defined by the bidirectional reflectance distribution function (BRDF) of that material. A BRDF is a function of the contact point, the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The first and last terms are almost universally ignored. The first one because most simulated objects are, or can be broken up into, homogeneous entities. The last one because it is considered to have an inconsequential effect on radiance.
-[ BRDF( wi, wo, lambda ) : (angle, angle) -> (angle, angle) -> wavelength -> float ]
-A material's BRDF is assumed not to change over time or when in motion. These are very reasonable, if not one hundred percent correct assumptions for the purposes of practical rendering.
+[ BRDF : (angle, angle) -> (angle, angle) -> wavelength -> float ]
+An object's BRDF is assumed not to change over time or when in motion. These are very reasonable, if not one hundred percent correct assumptions for the purposes of practical rendering.
 The same kind of function for refractive transmission rather than reflection is called a bidirectional transmittance distribution function. A BTDF has the same type as a BRDF.
-[ BTDF( wi, wo, lambda ) : (angle, angle) -> (angle, angle) -> wavelength -> float ]
+[ BTDF : (angle, angle) -> (angle, angle) -> wavelength -> float ]
 A BRDF and a BTDF extended with each other is sometimes called a bidirectional scattering distribution function.
 
 Most light bouncing around the virtual scene never makes it to the camera so its effect on the image seen by the camera is zero. Time and effort spent on tracing these rays of light is wasted.
 To counter this problem path tracing follows rays starting from the camera instead of the other way around. (The opposite is usually called "light path tracing". The terms "forward path tracing" and "backward path tracing" are not recommended because of their ambiguity. These two options do not cover the whole range of possible approaches though.)
 Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BRDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
-So physically ... Now if the operation used to incorporate the color of a surface into the color of the ray is commutative we should get the same end result.
-Indeed it is very easy to see that
-ray.paint( (r1, g1, b1) ).paint( (r2, g2, b2) ) == ray.paint( (r2, g2, b2) ).paint( (r1, g1, b1) )
+So if a path has been established from the camera to a lightsource it is a physically valid assumption to say that light is flowing from the lightsource to the camera along the same path. Now if the operation used to incorporate the color of a surface into the color of the ray is commutative we should get the same end result as if we traced light rays from the lightsource. Indeed it is very easy to see that
+paint( paint(ray.color, (r, g, b)), (r', g', b') ) == paint( paint(ray.color, (r', g', b')), (r, g, b) )
+
+It is worth noting that because of their stochastic nature paths are sometimes called "random walks".
 
 1.3. The Camera Model
 
