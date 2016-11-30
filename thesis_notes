@@ -374,6 +374,8 @@ Naive Path Tracing | Path Tracing with Zones
 codebase metrics --
 LOC
 Cyclomatic complexity
+performance --
+intersection tests
 
 3.2. Empirical Results
 
