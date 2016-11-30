@@ -502,6 +502,7 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
 []Henrik Wann Jensen: Global Illumination using Photon Maps  http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
 [Buckalew & Fussell] Illumination Networks: Fast Realistic Rendering with General Reflectance Functions  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
+[] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing (Proceedings of Graphics Interface 2007)
 [] https://en.wikipedia.org/wiki/Spectral_rendering
 [] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
 [] https://en.wikipedia.org/wiki/Saturable_absorption
