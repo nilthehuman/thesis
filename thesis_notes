@@ -40,7 +40,7 @@ Yet even after significant theoretical progress and a thousandfold increase in t
 Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
 Still the only kind of project utilizing real-time path tracing is little proof-of-concept games.[x][y][z]
 
-In the present thesis a method of speeding up path-based rendering by grouping paths together according to spatial coherence is outlined. The algorithm is in the early stages of its development but some of the results are promising.
+In the present thesis a method of speeding up path-based rendering by grouping paths together according to spatial coherence is outlined. The algorithm is in the early stages of development but some of the results are promising.
 
 Chapter one is dedicated to a concise discussion of conventional path tracing both as the standard method for global illumination and as a reference for the new algorithm.
 Chapter two introduces the concept of "zones" and what they are used for in the new algorithm. A detailed discussion of both phases (or passes) of the algorithm is given.
