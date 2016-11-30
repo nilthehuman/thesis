@@ -237,7 +237,7 @@ A significant part of Chapter One was devoted to discussing noise and the differ
 Describing the low-level implementation details of the rendering program would make for a boring read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
 Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own "zone tracer" application. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
 
-The title of the thesis is something of a misnomer in that zones are only loosely related to ray packets but the method did not have a set name at the time nor did the author want to use a confusing nonsense title. Zones still resemble ray packets in that they both make use of ray coherence, all (hypothetical) rays originate at a common point and...  See section 2.2. for details.
+The title of the thesis is something of a misnomer in that zones are only loosely related to ray packets but the method did not have a set name at the time nor did the author want to use a confusing nonsense title. Zones are a variant of ray packets in the sense that they both make use of ray coherence, all (hypothetical) rays originate at a common point and they both attempt to reduce the number of intersection tests needed for a high-quality render. See section 2.2. for details.
 
 2.1. A Banal Observation
 
@@ -394,7 +394,7 @@ The difference in efficiency is more apparent when we allow each program only a 
 
 [ picture ]  [ picture ]
 
-Silence is able to make better use of the drastically limited resources because its sampling method is much less random. The zone tree guides the rays towards the areas where most of the light is actually coming from.
+Silence is able to make better use of the drastically limited resources because its sampling method is much less random. The zone tree guides the rays towards the areas where most of the light is actually coming from and minimizes the overhead caused by producing useless paths of no interest.
 Retra also took more time than Silence to render the scenes. (true?)
 
 Typical global illumination effects such as color bleeding and soft shadows are visible in the test case images.
