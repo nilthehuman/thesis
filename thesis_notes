@@ -177,6 +177,7 @@ pathtrace( *world*, *camera*, *s*, *d* )
 (The parameters s and d are chosen by the user.)
 This high-level overview already reveals a few interesting properties. The operations in the innermost loop need to be performed O(psd) times where p is the number of pixels in the chosen screen resolution, s is the number of samples per pixel and d is the maximum path depth allowed. Intersection detection is the only task in the loop that requires any kind of serious work so we expect it to be a performance bottleneck in the algorithm, and indeed it is.
 Also note that absorption is accounted for implicitly by incorporating the color of each surface hit.
+The characteristic noise comes exclusively from the only nondeterministic operation in the function: "continue in random direction". If we could somehow /know/ the average color of rays from that point on (essentially the integral on the right of the rendering equation) all the noise would disappear instantly.
 
 1.4.2. Technical Details
 
@@ -222,7 +223,7 @@ These methods are very far removed from our immediate topic though and we shall 
 
 2. Introducing the New Algorithm
 
-rather than developing methods to isolate and reduce noise we can try and avoid incurring noise in the first place. The program in this thesis takes the latter approach — hence the name "Silence".
+A significant part of Chapter One was devoted to discussing noise and the different ways to cope with it. Rather than developing complicated methods to isolate and reduce noise we can also try and avoid incurring noise in the first place. The program in this thesis attempts to take the latter approach — hence the name "Silence".
 
 Describing the low-level implementation details of the rendering program would make for a boring read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
 Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own "zone tracer" application. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
