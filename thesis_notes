@@ -137,10 +137,10 @@ It is worth noting that because of their stochastic nature paths are sometimes c
 
 There is no reason to complicate the camera model especially since the simulation of the optical properties of cameras is not part of our discussion. We shall rely on the simplest possible option: a pinhole camera model.
 We imagine that there is an ideal invisible camera in the world space defined by its viewpoint (or "aperture" in optics parlance), a rectangular screen in front of the viewpoint and the resolution of the screen. It's almost as if we are seeing the virtual world through a window. (Technically a pinhole camera produces the image on a screen /behind/ the viewpoint. The only difference is the image being point-reflected and natural near-plane clipping, that is, the invisibility of virtual objects nearer than the screen.)
+Screen = Triplet^4 x N+^2
+Camera = Triplet x Screen
 The so-called viewing frustum emerges naturally as the far side (from the viewpoint) of the infinite pyramid whose apex is the viewpoint and its edges are the four rays connecting the viewpoint and the corners of the screen cut by the screen plane.
 A camera of this kind sees every object in its viewing frustum sharply or "in focus" (although the latter term is misleading as the model involves no lenses).
-Screen = Triplet^4 x int^2
-Camera = Triplet x Screen
 When a light ray happens to pierce the imaginary screen and exactly strike the viewpoint its color tuple is registered for the screen pixel it just traveled through. As discussed in the previous section we reverse this process to trace eye paths to all lightsources. In directions unblocked by any object the camera sees the color of the sky (part of the world description).
 Although rays of arbitrarily large energy are allowed a screen pixel becomes saturated at (1, 1, 1) which appears as the white color.
 
