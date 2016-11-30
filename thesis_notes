@@ -188,7 +188,7 @@ The characteristic noise comes exclusively from the only nondeterministic operat
 
 Intersection detection is a nontrivial task. Fortunately by the late 1990's fast and easy to implement algorithms have been found for all common shapes[][].
 Each instance of light-material interaction is decided by taking a random number in a range divided up into segments proportionate to the probability (i.e. the weight) of each interaction in the material's simplified BSDF.
-Lambertian reflection is quite easy to implement. Ordinary Gaussian distributions along all three dimensions can be used to obtain a random direction, and all that remains is to mirror it if it falls below the surface and to normalize it. Another way is to pick uniformly random points in the half unit cube around the hemisphere and reject them until one falls inside or on the hemisphere.[]
+Lambertian reflection is quite easy to implement. Ordinary Gaussian distributions along all three dimensions can be used to obtain a random direction, and all that remains is to mirror it if it falls below the surface. Another way is to pick uniformly random points in the half unit cube around the hemisphere and reject them until one falls inside or on the hemisphere.[]
 Ideal reflection is trivial. Refraction direction is governed by Snell's law[].
 Instead of storing the final colors of all individual rays sent through a pixel in practice the colors are added up in a single tuple and then the sum value is divided by s at the end; a simple and memory-efficient way of obtaining the average.
 
