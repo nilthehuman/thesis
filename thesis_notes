@@ -141,7 +141,8 @@ The so-called viewing frustum emerges naturally as the far side (from the viewpo
 A camera of this kind sees every object in its viewing frustum sharply or "in focus" (although the latter term is misleading as the model involves no lenses).
 Screen = Triplet^4 x int^2
 Camera = Triplet x Screen
-When a light ray happens to pierce the imaginary screen and exactly strike the viewpoint its color tuple is registered for the screen pixel it just traveled through. As discussed in the previous section we reverse this process to trace eye paths to all lightsources.
+When a light ray happens to pierce the imaginary screen and exactly strike the viewpoint its color tuple is registered for the screen pixel it just traveled through. As discussed in the previous section we reverse this process to trace eye paths to all lightsources. In directions unblocked by any object the camera sees the color of the sky (part of the world description).
+Although rays of arbitrarily large energy are allowed a screen pixel becomes saturated at (1, 1, 1) which appears as the white color.
 
 1.4. The Core Algorithm
 
