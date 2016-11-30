@@ -110,18 +110,21 @@ The portion of light that is absorbed by the surface has no further effect other
 Note that real physical materials typically do not behave as ideal specular reflectors or ideal (Lambertian) diffuse reflectors. Consider the flat surface of a polished wooden table and the camera and a lightsource at mirrored angles to the surface. The camera should see a blurred image of the lightsource that looks slightly larger than the original. This is because instead of reflecting ideally such a surface will scatter the light slightly resulting in a fuzzy image.
 Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb it all. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.
 If a given material has non-grey color (white and black being special cases of grey) then a different amount is absorbed of an incoming ray's total energy at each primary color wavelength. We interpret this effect as changing the color of the ray in our model: we define a method to "incorporate" the effect of the surface into the color of the ray.
-paint ∈ Triplet -> Triplet -> Triplet
+paint : Triplet -> Triplet -> Triplet
 paint( color, color' ) = (color.r * color'.r, color.g * color'.g, color.b * color'.b)
 If for example a ray of color (r, g, b) encounters a surface that reflects all of red, half of green and none of blue particles the reflected ray shall have color (r, 0.5*g, 0).
 
 Exactly what percentage of the energy per unit surface area is reflected in a certain direction when light meets a certain kind of material is governed by the bidirectional reflectance distribution function (BRDF) of that material. A BRDF is a function of the contact point, the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The first and last terms are almost universally ignored. The first one because most simulated objects are, or can be broken up into, homogeneous entities. The last one because it is considered to have an inconsequential effect on radiance.
-[ BRDF : (angle, angle) -> (angle, angle) -> wavelength -> float ]
+Direction = R^2
+Wavelength = R+
+BRDF : Direction -> Direction -> Wavelength -> R>=0
 An object's BRDF is assumed not to change over time or when in motion. These are very reasonable, if not one hundred percent correct assumptions for the purposes of practical rendering.
 The same kind of function for refractive transmission rather than reflection is called a bidirectional transmittance distribution function. A BTDF has the same type as a BRDF.
-[ BTDF : (angle, angle) -> (angle, angle) -> wavelength -> float ]
+BTDF : Direction -> Direction -> Wavelength -> R>=0
 A BRDF and a BTDF extended with each other is sometimes called a bidirectional scattering distribution function.
 
 Although there is a wide variety of legal and even physically plausible BSDF's we shall restrict the model to a simplified subset of them. All simplified BSDF's shall be a linear combination of the four ideal functions representing specular reflection, metallic reflection (a special case of the former), Lambertian reflection and refraction.
+BSDF : Direction -> Direction -> Wavelength -> R>=0
 BSDF = a*BRDFdiffuse + b*BRDFmetallic + c*BRDFreflect + d*BTDFrefract, where 1 = a + b + c + d
 (Absorption shall be represented in the color of the material.)
 
@@ -152,7 +155,7 @@ With that we are ready to review how classic path tracing works on a technical l
 
 The following pseudocode procedure describes the basic path tracing algorithm on a very abstract level.
 
-pathtrace ∈ World -> Camera -> int -> int -> RGB^p
+pathtrace : World -> Camera -> N+ -> N+ -> RGB^p
 pathtrace( *world*, *camera*, *s*, *d* )
 	for each *pixel* in camera.screen:
 		for [0,s):
