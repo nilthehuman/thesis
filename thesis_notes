@@ -75,31 +75,29 @@ A quick review of the classic path tracing* algorithm follows, broken down into 
 
 1.1. The Lighting Model
 
-This section serves as an introduction to the basic properties of visible light as simulated in path tracing. We are going to take some liberties to arrive at a compact, intuitive and almost physically plausible model of light.
+This section serves as an introduction to the basic properties of visible light as simulated in path tracing. We are going to take some liberties to arrive at a compact, intuitive and almost physically plausible model of light rooted in geometrical optics.
 
-In path tracing light is treated as a very large number of discrete infinitesimally small particles traveling through space and occasionally interacting with material surfaces or being registered by a virtual camera. It is a well known fact that physical light is not literally a stream of particles. In some cases it does behave as such, in others not at all. In fact physicists have yet to come up with an appropriate metaphor that fully and accurately captures the nature of electromagnetic radiation. Remarkably though the particle model is good enough to fool the human eye, as proven by path tracing.
+In path tracing light is treated as a very large number of discrete, infinitesimally small particles traveling through space and occasionally interacting with material surfaces or being registered by a virtual camera. It is a well known fact that physical light is not literally a stream of particles. In some cases it does behave as such, in others not at all. In fact physicists have yet to come up with an appropriate metaphor that fully and accurately captures the nature of electromagnetic radiation. Remarkably though the particle model is good enough to fool the human eye, as proven by path tracing.
 Each particle has a wavelength associated with it and a finite amount of energy which is a function of that wavelength. Exactly what values nature defines does not matter to us for reasons we will see shortly.
-
 Light particles are created by lightsources. The physical reasons of light emission do not concern us. We can just imagine that a limitless stream of particles is magically emanating from all surface points of all lightsources all the time.
 All lightsources in the model are either point lights or diffuse area lightsources. Point lights emit light uniformly in all directions. All surface points of area lightsources emit light uniformly in a hemisphere whose plane is tangential to the surface at the surface point.
-
 In vacuum and in homogeneous media light particles always travel in a straight line. Again, that's not true but true enough for any errors to be imperceptible under the circumstances humans are used to. The trajectory of a single undisturbed particle over time is a geometrical ray.
-We shall use the word "ray" to mean a set of n particles travelling along such a trajectory where n is a suitably large number: if we need to split a ray into k rays of equal energy we shall always assume that n mod k / n is a negligible number. In effect we treat the total energy of a ray as a continuous rather than discrete quantity, so the amount of energy in a single particle is irrelevant.
+We shall use the word "ray" to mean a set of n particles travelling along such a trajectory where n is a suitably large number: if we need to split a ray into k rays of equal energy we shall always assume that n mod k / n is a negligible number. In effect we treat the total energy of a ray as a continuous rather than discrete quantity, so the amount of energy in a single notional particle is irrelevant.
 Such rays are the central tool (and corresponding data structure) the path tracing algorithm is built upon.
-
-How fast do light particles travel? A reasonable first approximation is that they travel from the lightsource to their final destination instantly, at infinite speed. Light is so much faster than ordinary positive mass objects around us that this exaggeration compromises our model in absolutely no way.
-(The curious reader might be interested in exotic raytracing projects that deliberately /reduce/ the speed of light[]. They show off fantastic, dreamlike relativistic effects.)
-
+How fast do light particles travel? A reasonable first approximation is that they travel from the lightsource to their final destination instantly, at infinite speed. Light is so much faster than ordinary positive mass objects around us that this exaggeration compromises our model in absolutely no way. (The curious reader might be interested in exotic raytracing projects that deliberately /reduce/ the speed of light[]. They show off fantastic, dreamlike relativistic effects.)
 We imagine that all wavelengths of light travel together in a single ray no matter what happens to the ray. This is another physically inaccurate simplification. Light particles are independent of each other and when refracted on a barrier between different material media each wavelength of light reacts differently and they are scattered away from each other. Modern rendering engines use spectral path tracing[] to account for this phenomenon.
+Finally, in order to represent a ray's intensity across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b ∈ R>=0 to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
 
-Finally, in order to represent a ray's intensity across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b e [0,inf) to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
+Triplet = R³
+RGB = R>=0³
+Ray = (Triplet, Triplet, RGB)
 
 We have established that when undisturbed a ray will travel along a straight line. What happens when there is something in the way?
 
 1.2. Light-Material Interaction
 
 When a particle of light collides with a physical surface a number of things can happen:
-* Absorption. The energy of particle is absorbed by the physical object.
+* Absorption. The energy of the particle is absorbed by the physical object.
 * Specular reflection. The particle bounces off at more or less the same angle it arrived at, such as off a mirror.
 * Diffuse reflection. The particle bounces off at a more or less random angle.
 * Refraction. The particle penetrates the object and continues its path inside it at an angle determined by refractive indices.[Snell]
