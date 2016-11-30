@@ -136,30 +136,33 @@ With that we are ready to review how classic path tracing works on a technical l
 
 The following pseudocode procedure describes the basic path tracing algorithm on a very abstract level.
 
-for each screen pixel:
-	for [0,s):
-		shoot a ray from the viewpoint through the pixel
-		while 0 < ray.intensity and ray.depth <= d:
-			find nearest intersection with world geometry
-			if light hit:
-				incorporate color of light
-				return ray.color
-			if no surface hit:
-				incorporate color of sky
-				return ray.color
-			incorporate color of intersected surface
-			if intersected surface...
-				reflects diffusely:
-					continue in random direction
-				reflects specularly:
-					continue in mirror direction
-				refracts:
-					continue in refracted direction
-			ray.depth++
-		return (0, 0, 0)
-	average the resulting ray intensities
+pathtrace( *world*, *camera*, *s*, *d* )
+	for each *pixel* in camera.screen:
+		for [0,s):
+			shoot a *ray* from camera.viewpoint through the pixel
+			while 0 < ray.intensity and ray.depth++ <= d:
+				find nearest intersected *surface*
+				if *light* hit:
+					ray.paint( color of light )
+					break
+				if no surface hit:
+					ray.paint( color of sky )
+					break
+				ray.paint( color of intersected surface )
+				if intersected surface...
+					reflects diffusely:
+						dampen ray color by amount of diffuse reflectance
+						continue in random direction
+					reflects specularly:
+						dampen ray color by amount of specular reflectance
+						continue in mirror direction
+					refracts:
+						dampen ray color by amount of transmission
+						continue in refracted direction
+		pixel.color = average of resulting ray colors
+	return pixels
 
-(The constants s and d are chosen by the user.)
+(The parameters s and d are chosen by the user.)
 This high-level overview already reveals a few interesting properties. The operations in the innermost loop need to be performed O(psd) times where p is the number of pixels in the chosen screen resolution, s is the number of samples per pixel and d is the maximum path depth allowed. Intersection detection is the only task in the loop that requires any kind of serious work so we expect it to be a performance bottleneck in the algorithm, and indeed it is.
 Also note that absorption is accounted for implicitly by incorporating the color of each surface hit.
 
