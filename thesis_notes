@@ -178,29 +178,36 @@ pathtrace( *world*, *camera*, *s*, *d* )
 This high-level overview already reveals a few interesting properties. The operations in the innermost loop need to be performed O(psd) times where p is the number of pixels in the chosen screen resolution, s is the number of samples per pixel and d is the maximum path depth allowed. Intersection detection is the only task in the loop that requires any kind of serious work so we expect it to be a performance bottleneck in the algorithm, and indeed it is.
 Also note that absorption is accounted for implicitly by incorporating the color of each surface hit.
 
+1.4.2. Technical Details
+
+Intersection detection is a nontrivial task. Fortunately by the late 1990's fast and easy to implement algorithms have been found for all common shapes[][].
+Lambertian reflection is quite easy to implement. Ordinary Gaussian distributions along all three dimensions can be used to obtain a random direction, and all that remains is to mirror it if it falls below the surface and to normalize it. Another way is to pick uniformly random points in the half unit cube around the hemisphere and reject them until one falls inside or on the hemisphere.[]
+Ideal reflection is trivial. Refraction direction is governed by Snell's law[].
+Instead of storing the final colors of all individual rays sent through a pixel in practice the colors are added up in a single tuple and then the sum value is divided by s at the end; a simple and memory-efficient way of obtaining the average.
+
 1.5. Variants of the Core Algorithm
 Some obvious deficiencies of basic path tracing were soon noted and there was enough low-hanging fruit for the original algorithm to start evolving rapidly.
-The perceptive reader will have noticed that most of the rays are actually wasted in the above routine because they never reach a lightsource. The easiest way to rectify that is direct light sampling, now universally used and considered an integral part to path tracing.
-One can cheaply improve the sampling strategy even further by picking outward directions intelligently every time a diffuse surface is hit. This is called importance sampling [...]
+The perceptive reader will have noticed that most of the rays are actually wasted in the above routine because they never reach a lightsource. The easiest way to rectify that is by direct light sampling, now universally used and considered an integral part to path tracing.
+One can cheaply improve the sampling strategy even further by picking outward directions intelligently every time a diffuse surface is hit. This is called importance sampling [... sampling the BSDF]
 Another apparent problem was the fact that sending rays through the center of each screen pixel is prone to aliasing artifacts. Some researchers came up with ideas to use multiple different rays per each pixel which spawned distributed ray tracing[], while most others tried replacing the infinitesimally thin rays with shapes with positive volume. This gave rise to beam tracing, cone tracing, pencil tracing and more.
 Yet others realized that carefully perturbing the intersection points slightly once a valid path has been found can be used to construct more valid paths and Metropolis light transport was born.
-The section "Light-Material Interaction" hinted at eye ray tracing and light ray tracing not being the only available options. One of the most fashionable unbiased rendering algorithms today is bidirectional path tracing[]. It starts by constructing paths both from the lightsources and the camera a few bounces deep and then looks for ways to join light paths and eye ray paths together. Bidirectional path tracing performance is usually superior to vanilla path tracing.
+The section "Light-Material Interaction" hinted at eye ray tracing and light ray tracing not being the only available options. One of the most fashionable unbiased rendering algorithms today is bidirectional path tracing[]. It starts by constructing paths both from the lightsources and the camera a few bounces deep and then looks for ways to join light paths and eye ray paths together. Bidirectional path tracing performance is usually superior to vanilla path tracing. Light rays help with indirect illumination and caustics.
 
 1.6. Spatial Acceleration Structures
-Finding the nearest intersection of a ray with any surface in the scene is one of the most common tasks in any ray tracing engine. Naive path tracing was soon improved dramatically by including so-called acceleration structures that help reduce the number of intersection tests to be performed. By revealing what object are present in a given sector of the world not only do they make finding intersecions faster, they also help solve the hidden surface removal problem.
-This section is kept short because neither application presented in this thesis actually uses any acceleration structures (unless you count the zone trees Silence uses but most ).
-Acceleration structures are only relevant to our discussion insofar as ...
+Finding the nearest intersection of a ray with any surface in the scene is one of the most common tasks in any ray tracing engine. Naive path tracing was soon improved dramatically by including so-called acceleration structures that help reduce the number of intersection tests to be performed. By revealing what object are present in a given sector of the world not only do they speed up finding intersecions, they also help solve the hidden surface removal problem.
+This section is kept short because neither application presented in this thesis actually uses any acceleration structures (unless you count the zone trees Silence uses but that's a very different kind of thing).
+Acceleration structures are only relevant to our discussion insofar as ... For now it's enough that we are aware of them.
 
 The most popular acceleration structures are the following:
 * Binary space partitioning (BSP) trees recursively split the world space in two along arbitrary (normally axis-aligned) planes. Each node in the tree has zero or two children.
-* k-d (most commonly 3-d) trees are BSP trees where each subsequent level has divisions along the next world axis. Level zero is the root node, then level one splits the space along x = x0 for some suitable x0, then level two splits each half separately along some y = y0 and y = y1 into four leaves total, then level three splits each leaf again by the z coordinate and so on.
+* k-d (most commonly 3-d) trees are BSP trees where each subsequent level has divisions along the next world axis. Level zero is the root node, then level one splits the space along x = x0 (for some suitable x0), then level two splits each half separately along some y = y0 and y = y1 into four leaves total, then level three splits each leaf again by the z coordinate and so on.
 * Octrees recursively divide the world space into eight equal parts along the planes x = (x0+x1)/2, y = (y0+y1)/2 and z = (z0+z1)/2 simultaneously where [x0, x1]x[y0, y1]x[z0, z1] is the set of points in the current node. Each node has either zero or eight children.
 * Bounding volume hierarchies take a bottom-up approach, first they wrap each individual object in a bounding box (or other bounding volume), then nearby objects are grouped together into bigger bounding boxes and so on until all of the scene geometry is enclosed in a single bounding box.
 
-All of the above are essentially space partitioning schemes that serve to organize parts of the world geometry into easy-to-manage, fast data structures. As mentioned above the demo applications use no such data structures.
+All of the above are essentially space partitioning schemes that serve to organize parts of the world geometry into easy-to-manage, fast data structures. As mentioned above the demo applications use no such data structures in order to keep them small and simple.
 
 1.7. Strategies to Reduce Noise
-As discussed before noise reduction is one of the  Smart noise filtering algorithms in path traced images have almost grown into a field of their own recently. Successful filtering techniques deserving of mention include the following:
+As mentioned before efficient noise reduction is one of the main subjects of current global illumination research. Smart noise filtering algorithms in path traced images have almost grown into a field of their own in recent years. Successful filtering techniques deserving of mention include the following:
 * greedy error minimization in two steps[Rousselle]
 * random parameter filtering,
 * and neural networks[MLA] trained on pairs of noisy and clean renders of the same scene.
