@@ -415,7 +415,7 @@ The author is fairly satisfied with the design and code quality of Retra, but le
 4.2. Points of Demonstration
 
 Some would say that using simplistic test cases fails to demonstrate the potential of an algorithm. The author respectfully disagrees. The sparse, simple and easy-to-edit scenes used in this thesis proved quite enough to highlight the differences between the traditional and the modified algorithm.
-The thesis mixes set theory and type theory notation to convey the types of datatypes and functions in a really informal way. This is done to give an immediate, intuitive and clear idea of each type and function. After a check from the supervisor it was concluded that this is acceptable. (?)
+The thesis mixes set theory and type theory notation to convey the types of data and functions in a really informal way. This is done to give an immediate, intuitive and clear idea of each type and function. After a check from the supervisor it was concluded that this is acceptable. (?)
 The author wishes he knew more GIMP or some other image editor application. Illustrations are quite lacking in the thesis.
 The discussions of both traditional and modified path tracing were composed with the reader in mind and an honest attention to detail. It is the author's sincerest hope that the thesis is of real value and that readers will feel they gained something from it.
 
