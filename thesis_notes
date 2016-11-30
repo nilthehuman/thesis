@@ -108,7 +108,7 @@ In the previous section we made the assumption that a ray contains so many parti
 The portion of light that is absorbed by the surface has no further effect other than heating up the receiving object by some immeasurable amount. The other portions continue flying through the virtual world and may or may not change the picture the camera is generating in the end.
 
 Note that real physical materials typically do not behave as ideal specular reflectors or ideal (Lambertian) diffuse reflectors. Consider the flat surface of a polished wooden table and the camera and a lightsource at mirrored angles to the surface. The camera should see a blurred image of the lightsource that looks slightly larger than the original. This is because instead of reflecting ideally such a surface will scatter the light slightly resulting in a fuzzy image.
-Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb it all. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.
+Ideally white surfaces will reflect all incoming radiation, ideally black surfaces will absorb it all. Most real materials will both absorb and reflect some amount of the incoming light, and many exhibit refraction as well. Also, subsurface scattering is a complicated combination of refraction and reflection that we are not going to deal with here.[]
 If a given material has non-grey color (white and black being special cases of grey) then a different amount is absorbed of an incoming ray's total energy at each primary color wavelength. We interpret this effect as changing the color of the ray in our model: we define a method to "incorporate" the effect of the surface into the color of the ray.
 paint : Triplet -> Triplet -> Triplet
 paint( color, color' ) = (color.r * color'.r, color.g * color'.g, color.b * color'.b)
@@ -497,6 +497,7 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [1] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
 [2] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
 [3] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
 [] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
 [] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
 [] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
