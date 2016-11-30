@@ -100,7 +100,7 @@ When a particle of light collides with a physical surface a number of things can
 * Absorption. The energy of the particle is absorbed by the physical object.
 * Specular reflection. The particle bounces off at more or less the same angle it arrived at, such as off a mirror.
 * Diffuse reflection. The particle bounces off at a more or less random angle.
-* Refraction. The particle penetrates the object and continues its path inside it at an angle determined by refractive indices.[Snell]
+* Refraction. The particle penetrates the object and continues its path inside it at an angle determined by refractive indices.
 
 It is important to note that light-material interaction is a stochastic process. What a concrete particle will do after hitting a concrete surface any given time cannot be known in advance. The best we can do is to assign probabilities to each outcome. The probabilities will depend on the characteristics of the exact material in question.
 In the previous section we made the assumption that a ray contains so many particles that it does not matter there is a finite number of them. Relying on the exact same assumption we can say that a surface actually absorbs, reflects and transmits continuous fractions of a ray's energy. Then, conveniently, the factor by which each kind of interaction reduces the color intensity of a ray will be equal to the probability of that interaction (ignoring the effect of the color of the surface).
