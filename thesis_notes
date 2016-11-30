@@ -60,7 +60,7 @@ The complete source code of both demonstrative applications is made available on
 
 1. A Brief Overview of Conventional Path Tracing
 
-A quick review of the classic path tracing* algorithm follows after establishing a basic theoretical framework. The same framework shall be used in Chapter Two. The chapter is broken down into the following sections:
+A quick review of the classic path tracing* algorithm follows after establishing a basic theoretical framework. The same framework shall be used in Chapter Two. No prior knowledge of the algorithm is assumed. The chapter is broken down into the following sections:
 
 1.1. The Lighting Model
 1.2. Light-Material Interaction
