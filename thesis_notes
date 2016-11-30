@@ -87,6 +87,9 @@ In vacuum and in homogeneous media light particles always travel in a straight l
 We shall use the word "ray" to mean a set of n particles travelling along such a trajectory where n is a suitably large number: if we need to split a ray into k rays of equal energy we shall always assume that n mod k / n is a negligible number. In effect we treat the total energy of a ray as a continuous rather than discrete quantity, so the amount of energy in a single particle is irrelevant.
 Such rays are the central tool (and corresponding data structure) the path tracing algorithm is built upon.
 
+How fast do light particles travel? A reasonable first approximation is that they travel from the lightsource to their final destination instantly, at infinite speed. Light is so much faster than ordinary positive mass objects around us that this exaggeration compromises our model in absolutely no way.
+(The curious reader might be interested in exotic raytracing projects that deliberately /reduce/ the speed of light[]. They show off fantastic, dreamlike relativistic effects.)
+
 We imagine that all wavelengths of light travel together in a single ray no matter what happens to the ray. This is another physically inaccurate simplification. Light particles are independent of each other and when refracted on a barrier between different material media each wavelength of light reacts differently and they are scattered away from each other. Modern rendering engines use spectral path tracing[] to account for this phenomenon.
 
 Finally, in order to represent a ray's intensity across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b e [0,inf) to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
@@ -462,6 +465,7 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [] https://en.wikipedia.org/wiki/Saturable_absorption
 [] https://en.wikipedia.org/wiki/Snell%27s_law
 [n] https://home.otoy.com/render/brigade/
+[s] http://www.hakenberg.de/diffgeo/special_relativity.htm
 [x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
 [y] L. Dymchenko: AntiPlanet http://www.virtualray.ru/eng/download.html
 [z] E. Biddulph: Quake 2 Realtime GPU Pathtracing http://amietia.com/q2pt.html
