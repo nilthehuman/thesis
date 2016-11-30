@@ -121,6 +121,10 @@ The same kind of function for refractive transmission rather than reflection is 
 [ BTDF : (angle, angle) -> (angle, angle) -> wavelength -> float ]
 A BRDF and a BTDF extended with each other is sometimes called a bidirectional scattering distribution function.
 
+Although there is a wide variety of legal and even physically plausible BSDF's we shall restrict the model to a simplified subset of them. All simplified BSDF's shall be a linear combination of the four ideal functions representing specular reflection, metallic reflection (a special case of the former), Lambertian reflection and refraction.
+BSDF = a*BRDFdiffuse + b*BRDFmetallic + c*BRDFreflect + d*BTDFrefract, where 1 = a + b + c + d
+(Absorption shall be represented in the color of the material.)
+
 Most light bouncing around the virtual scene never makes it to the camera so its effect on the image seen by the camera is zero. Time and effort spent on tracing these rays of light is wasted.
 To counter this problem path tracing follows rays starting from the camera instead of the other way around. (The opposite is usually called "light path tracing". The terms "forward path tracing" and "backward path tracing" are not recommended because of their ambiguity. These two options do not cover the whole range of possible approaches though.)
 Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BRDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
@@ -182,6 +186,7 @@ The characteristic noise comes exclusively from the only nondeterministic operat
 1.4.2. Technical Details
 
 Intersection detection is a nontrivial task. Fortunately by the late 1990's fast and easy to implement algorithms have been found for all common shapes[][].
+Each instance of light-material interaction is decided by taking a random number in a range divided up into segments proportionate to the probability (i.e. the weight) of each interaction in the material's simplified BSDF.
 Lambertian reflection is quite easy to implement. Ordinary Gaussian distributions along all three dimensions can be used to obtain a random direction, and all that remains is to mirror it if it falls below the surface and to normalize it. Another way is to pick uniformly random points in the half unit cube around the hemisphere and reject them until one falls inside or on the hemisphere.[]
 Ideal reflection is trivial. Refraction direction is governed by Snell's law[].
 Instead of storing the final colors of all individual rays sent through a pixel in practice the colors are added up in a single tuple and then the sum value is divided by s at the end; a simple and memory-efficient way of obtaining the average.
