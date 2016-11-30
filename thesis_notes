@@ -405,9 +405,16 @@ Adhering to Object-Oriented principles was of relative rather than absolute impo
 
 The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
 
-4.2. Findings
+4.2. Points of Demonstration
 
-The actual performance increase from the new method fell remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude).
+Some would say that using simplistic test cases fails to demonstrate the potential of an algorithm. The author respectfully disagrees. The sparse, simple and easy-to-edit scenes used in this thesis proved quite enough to highlight the differences between the traditional and the modified algorithm.
+The thesis mixes set theory and type theory notation to convey the types of datatypes and functions in a really informal way. This is done to give an immediate and clear idea of each type and function. A check from the supervisor it was concluded that this is acceptable. (?)
+The author wishes he knew more GIMP or some other image editor application. Illustrations are quite lacking in the thesis.
+The discussions of both traditional and modified path tracing were composed with the reader in mind and an honest attention to detail. It is the author's sincerest hope that the thesis is of real value and that readers will feel they gained something from it.
+
+4.3. Findings
+
+The actual performance increase from the new method fell remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude). Silence beat the naive renderer Retra by about two orders of magnitude in most test cases depending on what level of output convergence we demand of the latter.
 
 Keeping in mind that Silence is an extremely crude and primitive first attempt at harnessing the model's power it is safe to expect more algorithmic and performance gains from a more sophisticated and well thought-out implementation.
 
@@ -415,7 +422,7 @@ Quite naturally the bulk of the rendering time is still spent on finding ray-sur
 
 We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
 
-Some ubiquitous topics were surprisingly hard to find solid sources on. One would expect seminal papers to turn up on the first page of a simple Google search for terms like "Russian roulette". One would be wrong.
+Some ubiquitous techniques were surprisingly hard to find solid sources on. One would expect seminal papers to turn up on the first page of a simple Google search for terms like "Whitted ray tracing" or "Russian roulette". One would be wrong.
 
 5. Possible Further Improvements
 
