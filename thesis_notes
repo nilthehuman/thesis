@@ -147,6 +147,7 @@ With that we are ready to review how classic path tracing works on a technical l
 
 The following pseudocode procedure describes the basic path tracing algorithm on a very abstract level.
 
+pathtrace ∈ World -> Camera -> int -> int -> RGB^p
 pathtrace( *world*, *camera*, *s*, *d* )
 	for each *pixel* in camera.screen:
 		for [0,s):
