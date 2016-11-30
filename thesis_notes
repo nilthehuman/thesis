@@ -500,9 +500,9 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
 [] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
 [] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
-[] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
-[]Henrik Wann Jensen: Global Illumination using Photon Maps  http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
-[Buckalew & Fussell] Illumination Networks: Fast Realistic Rendering with General Reflectance Functions  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
+[] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise, 2015. (SIGGRAPH '15)  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
+[] H. W. Jensen: Global Illumination using Photon Maps, 1996. (Rendering Techniques '96) http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
+[] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
 [] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing (Proceedings of Graphics Interface 2007)
 [] https://en.wikipedia.org/wiki/Spectral_rendering
 [] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
@@ -511,6 +511,7 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [] T. Möller, B. Trumbore: Fast, Minimum Storage Ray/Triangle Intersection, 1997. (Journal of Graphics Tools)
 [] https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
 [] http://stats.stackexchange.com/questions/7977/how-to-generate-uniformly-distributed-points-on-the-surface-of-the-3-d-unit-sphere
+[] Ch. Valtin: Expo, 3D interior model  http://graphics.ucsd.edu/~henrik/images/imgs/expo.jpg
 [n] https://home.otoy.com/render/brigade/
 [s] http://www.hakenberg.de/diffgeo/special_relativity.htm
 [x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
