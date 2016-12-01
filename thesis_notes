@@ -33,8 +33,8 @@ A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint
 
 0. Introduction
 
-Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[Kajiya] in the 1980's people have been looking for efficient ways to cope with the problem.
-Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy while still being relatively easy to implement. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
+Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[2] in the 1980's people have been looking for efficient ways to cope with the problem.
+Path tracing[1] emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy while still being relatively easy to implement. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
 
 Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise** and speed — two sides of the same coin — remain essentially unsolved issues in the field.
 Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
@@ -505,13 +505,14 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 [1] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
 [2] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
 [3] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[] M. Radziszewski, K. Boryczko, W. Alda: An Improved Technique for Full Spectral Rendering, 2009. (Journal of WSCG 17.)
 [] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
 [] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
 [] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
 [] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise, 2015. (SIGGRAPH '15)  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
 [] H. W. Jensen: Global Illumination using Photon Maps, 1996. (Rendering Techniques '96) http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
 [] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
-[] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing (Proceedings of Graphics Interface 2007)
+[] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing, 2007. (Proceedings of Graphics Interface 2007)
 [] https://en.wikipedia.org/wiki/Spectral_rendering
 [] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
 [] https://en.wikipedia.org/wiki/Saturable_absorption
