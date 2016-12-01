@@ -504,8 +504,9 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 
 8. References
 [1] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
-[2] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
-[3] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[2] D. S. Immel, M. F. Cohen, D. P. Greenberg: A Radiosity Method for Non-Diffuse Environments, 1986. (SIGGRAPH '86)
+[3] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
+[4] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
 [] M. Radziszewski, K. Boryczko, W. Alda: An Improved Technique for Full Spectral Rendering, 2009. (Journal of WSCG 17.)
 [] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
 [] F. Nicodemus: Directional Reflectance and Emissivity of an Opaque Surface, 1965. (Applied Optics)
