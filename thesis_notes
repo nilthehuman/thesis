@@ -508,10 +508,13 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 [3] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
 [] M. Radziszewski, K. Boryczko, W. Alda: An Improved Technique for Full Spectral Rendering, 2009. (Journal of WSCG 17.)
 [] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
+[] F. Nicodemus: Directional Reflectance and Emissivity of an Opaque Surface, 1965. (Applied Optics)
 [] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
 [] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
 [] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise, 2015. (SIGGRAPH '15)  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
 [] H. W. Jensen: Global Illumination using Photon Maps, 1996. (Rendering Techniques '96) http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
+[] C. M. Goral, K. E. Torrance, D. P. Greenberg, B. Battaile: Modeling the Interaction of Light Between Diffuse Surfaces, 1984. (Computer Graphics 18.)
+[] C. Crassin, F. Neyret, M. Sainz, S. Green, E. Eisemann: Interactive Indirect Illumination Using Voxel Cone Tracing, 2011. (Proceedings of Pacific Graphics 2011)
 [] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
 [] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing, 2007. (Proceedings of Graphics Interface 2007)
 [] https://en.wikipedia.org/wiki/Spectral_rendering
