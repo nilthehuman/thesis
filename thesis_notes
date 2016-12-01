@@ -472,7 +472,9 @@ A variant of zone tracing could provide an attractive, low-cost alternative.
 Architecture
 The new method could prove extremely useful for architects, lighting and interior designers 
 With near real-time noiseless path tracing professionals would be able to demonstrate architectural environment models to costumers with a more interactive and lifelike experience.
-Low polygon count indirectly-lit interiors like this one[Jensen!] are good examples of where the new algorithm could shine.
+Low polygon count indirectly-lit interiors like the one below (render by H. W. Jensen, model by Ch. Valtin) are good examples of where the new algorithm could shine.
+
+[ http://graphics.ucsd.edu/~henrik/images/imgs/expo.jpg ]
 
 Art
 As with most image synthesis algorithms it only takes a few simple changes to the algorithm to get exciting freestyle artistic tools. By virtue of its simplicity the model lends itself well to creative experimentation to achieve surreal rather than realistic effects.
@@ -527,7 +529,6 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 [] https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
 [] http://stats.stackexchange.com/questions/7977/how-to-generate-uniformly-distributed-points-on-the-surface-of-the-3-d-unit-sphere
 [] M. Ragheb: Russian Roulette and Particle Splitting, lecture notes, 2013. http://mragheb.com/NPRE%20498MC%20Monte%20Carlo%20Simulations%20in%20Engineering/Russian%20Roulette%20and%20Particle%20Splitting.pdf
-[] Ch. Valtin: Expo, 3D interior model  http://graphics.ucsd.edu/~henrik/images/imgs/expo.jpg
 [n] The Brigade real-time path tracer engine, https://home.otoy.com/render/brigade/
 [s] http://www.hakenberg.de/diffgeo/special_relativity.htm
 [x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
