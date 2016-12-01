@@ -51,7 +51,7 @@ In chapter six we look at what communities and industries could benefit from qui
 An acknowledgement paragraph follows and then the list of references.
 An appendix of example output images is found at the end.
 
-The complete source code of both demonstrative applications is made available on GitHub. The path tracing reference program is called Retra (for "reference tracer"), the original rendering program is called Silence.
+The complete source code of both demonstrative applications is made available on GitHub. The path tracing reference program is called Retra[998] (for "reference tracer"), the original rendering program is called Silence[999].
 
 *Rendering procedures converge to a certain limit point in the space of possible images. The limit depends on both the input and the algorithm's own properties. If the limit is equal to the physically expected solution for any input the algorithm is called unbiased; if not, it is biased.
 **Noise means the visible "graininess" of an output image rendered with path tracing. It is a result of random sampling every time a ray hits a diffuse surface.
@@ -81,7 +81,7 @@ In path tracing light is treated as a very large number of discrete, infinitesim
 Each particle has a wavelength associated with it and a finite amount of energy which is a function of that wavelength. Exactly what values nature defines does not matter to us for reasons we will see shortly.
 Light particles are created by lightsources. The physical reasons of light emission do not concern us. We can just imagine that a limitless stream of particles is magically emanating from all surface points of all lightsources all the time.
 All lightsources in the model are either point lights or diffuse area lightsources. Point lights emit light uniformly in all directions. All surface points of area lightsources emit light uniformly in a hemisphere whose plane is tangential to the surface at the surface point.
-In vacuum and in homogeneous media light particles always travel in a straight line. Again, that's not true but true enough for any errors to be imperceptible under the circumstances humans are used to. The trajectory of a single undisturbed particle over time is a geometrical ray.
+In vacuum and in homogeneous media light particles always travel in a straight line. Again, that's not true but true enough for any errors to be imperceptible under the conditions humans are used to. The trajectory of a single undisturbed particle over time is a geometrical ray.
 We shall use the word "ray" to mean a set of n particles travelling along such a trajectory where n is a suitably large number: if we need to split a ray into k rays of equal energy we shall always assume that n mod k / n is a negligible number. In effect we treat the total energy of a ray as a continuous rather than discrete quantity, so the amount of energy in a single notional particle is irrelevant.
 Such rays are the central tool (and corresponding data structure) the path tracing algorithm is built upon.
 How fast do light particles travel? A reasonable first approximation is that they travel from the lightsource to their final destination instantly, at infinite speed. Light is so much faster than ordinary positive mass objects around us that this exaggeration compromises our model in absolutely no way. (The curious reader might be interested in exotic raytracing projects that deliberately /reduce/ the speed of light[]. They show off fantastic, dreamlike relativistic effects.)
@@ -128,16 +128,17 @@ The same kind of function for refractive transmission rather than reflection is 
 BTDF : Direction -> Direction -> Wavelength -> R>=0
 A BRDF and a BTDF extended with each other is sometimes called a bidirectional scattering distribution function.
 
-Although there is a wide variety of legal and even physically plausible BSDF's we shall restrict the model to a simplified subset of them. All simplified BSDF's shall be a linear combination of the four ideal functions representing specular reflection, metallic reflection (a special case of the former), Lambertian reflection and refraction.
-BSDF : Direction -> Direction -> Wavelength -> R>=0
+Although there is a wide variety of sensible and even physically plausible BSDF's we shall restrict the model to a simplified subset of them. First, we shall ignore the wavelength variable and say that all wavelengths scatter the same as suggested in section 1.1. Second, all simplified BSDF's shall be a linear combination of four ideal functions representing specular reflection, metallic reflection (a special case of the former), Lambertian reflection and refraction.
+BSDF : Direction -> Direction -> R>=0
 BSDF = a*BRDFdiffuse + b*BRDFmetallic + c*BRDFreflect + d*BTDFrefract, where 1 = a + b + c + d
 (Absorption shall be represented in the color of the material.)
 
 Most light bouncing around the virtual scene never makes it to the camera so its effect on the image seen by the camera is zero. Time and effort spent on tracing these rays of light is wasted.
 To counter this problem path tracing follows rays starting from the camera instead of the other way around. (The opposite is usually called "light path tracing". The terms "forward path tracing" and "backward path tracing" are not recommended because of their ambiguity. These two options do not cover the whole range of possible approaches though.)
-Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BRDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
+Taking this approach without compromising correctness is made possible by a fundamental symmetry in all physically plausible BSDF's and in the end by an elegant property of light as a physical phenomenon. A ray of light that is unabsorbed when it meets a surface will take the exact same path as a ray of light traveling in the reverse direction provided they suffer the same kind of material interaction.[Helm]
 So if a path has been established from the camera to a lightsource it is a physically valid assumption to say that light is flowing from the lightsource to the camera along the same path. Now if the operation used to incorporate the color of a surface into the color of the ray is commutative we should get the same end result as if we traced light rays from the lightsource. Indeed it is very easy to see that
 paint( paint(ray.color, (r, g, b)), (r', g', b') ) == paint( paint(ray.color, (r', g', b')), (r, g, b) )
+for any r, g, b, r', g' and b'.
 
 It is worth noting that because of their stochastic nature paths are sometimes called "random walks".
 
@@ -150,7 +151,7 @@ Camera = Triplet x Screen
 The so-called viewing frustum emerges naturally as the far side (from the viewpoint) of the infinite pyramid whose apex is the viewpoint and its edges are the four rays connecting the viewpoint and the corners of the screen cut by the screen plane.
 A camera of this kind sees every object in its viewing frustum sharply or "in focus" (although the latter term is misleading as the model involves no lenses).
 When a light ray happens to pierce the imaginary screen and exactly strike the viewpoint its color tuple is registered for the screen pixel it just traveled through. As discussed in the previous section we reverse this process to trace eye paths to all lightsources. In directions unblocked by any object the camera sees the color of the sky (part of the world description).
-Although rays of arbitrarily large energy are allowed a screen pixel becomes saturated at (1, 1, 1) which appears as the white color.
+Although rays of arbitrarily large energy are allowed a screen pixel becomes saturated at (1, 1, 1) which appears as the color white.
 
 1.4. The Core Algorithm
 
@@ -187,7 +188,7 @@ pathtrace( *world*, *camera*, *s*, *d* )
 		pixel.color = average of resulting ray colors
 	return pixels
 
-(The parameters s and d are chosen by the user.)
+(The parameters world, camera, s and d are chosen by the user.)
 This high-level overview already reveals a few interesting properties. The operations in the innermost loop need to be performed O(psd) times where p is the number of pixels in the chosen screen resolution, s is the number of samples per pixel and d is the maximum path depth allowed. Intersection detection is the only task in the loop that requires any kind of serious work so we expect it to be a performance bottleneck in the algorithm, and indeed it is.
 Also note that absorption is accounted for implicitly by incorporating the color of each surface hit.
 The characteristic noise comes exclusively from the only nondeterministic operation in the function: "continue in random direction". If we could somehow /know/ the average color of rays from that point on (essentially the integral on the right of the rendering equation) all the noise would disappear instantly.
@@ -523,5 +524,7 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 [x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
 [y] L. Dymchenko: AntiPlanet http://www.virtualray.ru/eng/download.html
 [z] E. Biddulph: Quake 2 Realtime GPU Pathtracing http://amietia.com/q2pt.html
+[998] https://github.com/nilthehuman/Retra
+[999] https://github.com/nilthehuman/Silence
 
 9. Appendix
