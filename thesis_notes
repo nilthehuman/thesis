@@ -34,7 +34,7 @@ A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint
 0. Introduction
 
 Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[Kajiya] in the 1980's people have been looking for efficient ways to cope with the problem.
-Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
+Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy while still being relatively easy to implement. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
 
 Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise and speed — two sides of the same coin — remain essentially unsolved issues in the field.
 Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
