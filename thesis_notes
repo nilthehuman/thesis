@@ -145,7 +145,7 @@ It is worth noting that because of their stochastic nature paths are sometimes c
 
 1.3. The Camera Model
 
-There is no reason to complicate the camera model especially since the simulation of the optical properties of cameras is not part of our discussion. We shall rely on the simplest possible option: a pinhole camera model.
+There is no reason to complicate the camera model especially since the simulation of the optical properties of actual cameras is not part of our discussion. We shall rely on the simplest possible option: a pinhole camera model.
 We imagine that there is an ideal invisible camera in the world space defined by its viewpoint (or "aperture" in optics parlance), a rectangular screen in front of the viewpoint and the resolution of the screen. It's almost as if we are seeing the virtual world through a window. (Technically a pinhole camera produces the image on a screen /behind/ the viewpoint. The only difference is the image being point-reflected and natural near-plane clipping, that is, the invisibility of virtual objects nearer than the screen.)
 Screen = Triplet^4 x N+^2
 Camera = Triplet x Screen
