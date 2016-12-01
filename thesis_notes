@@ -86,13 +86,15 @@ We shall use the word "ray" to mean a set of n particles travelling along such a
 Such rays are the central tool (and corresponding data structure) the path tracing algorithm is built upon.
 How fast do light particles travel? A reasonable first approximation is that they travel from the lightsource to their final destination instantly, at infinite speed. Light is so much faster than ordinary positive mass objects around us that this exaggeration compromises our model in absolutely no way. (The curious reader might be interested in exotic raytracing projects that deliberately /reduce/ the speed of light[]. They show off fantastic, dreamlike relativistic effects.)
 We imagine that all wavelengths of light travel together in a single ray no matter what happens to the ray. This is another physically inaccurate simplification. Light particles are independent of each other and when refracted on a barrier between different material media each wavelength of light reacts differently and they are scattered away from each other. Modern rendering engines use spectral path tracing[] to account for this phenomenon.
-Finally, in order to represent a ray's intensity across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b ∈ R>=0 to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
+Finally, in order to represent a ray's intensity* across the visible spectrum we need to use a finite number of representative wavelengths. We assign each ray a tuple (r, g, b) where r, g, b ∈ R>=0 to represent its color, i.e. we consider the ray to carry r, g and b units of energy in the form of red, green and blue light particles respectively. We need not be concerned with what the words "red", "green" and "blue" mean because we are going to leave it up to an image viewing application to interpret them. The three dimensions of the tuple are taken to be perfectly independent.
 
 Triplet = R³
 RGB = R>=0³
 Ray = (Triplet, Triplet, RGB)
 
 We have established that when undisturbed a ray will travel along a straight line. What happens when there is something in the way?
+
+*Intensity means the amount of power carried by the ray.
 
 1.2. Light-Material Interaction
 
@@ -114,7 +116,9 @@ paint : Triplet -> Triplet -> Triplet
 paint( color, color' ) = (color.r * color'.r, color.g * color'.g, color.b * color'.b)
 If for example a ray of color (r, g, b) encounters a surface that reflects all of red, half of green and none of blue particles the reflected ray shall have color (r, 0.5*g, 0).
 
-Exactly what percentage of the energy per unit surface area is reflected in a certain direction when light meets a certain kind of material is governed by the bidirectional reflectance distribution function (BRDF) of that material. A BRDF is a function of the contact point, the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The first and last terms are almost universally ignored. The first one because most simulated objects are, or can be broken up into, homogeneous entities. The last one because it is considered to have an inconsequential effect on radiance.
+Exactly what percentage of the energy per unit surface area is reflected in a certain direction when light meets a certain kind of material is governed by the bidirectional reflectance distribution function (BRDF) of that material. A BRDF is a function of the contact point, the incoming direction, the outgoing direction, the wavelength of light in question and, rarely, the amount of irradiance (certain physical substances will experience "saturation" when strongly lit[]). The first and last terms are almost universally ignored. The first one because most simulated objects are, or can be broken up into, homogeneous entities. The last one because it is considered to have an inconsequential effect on radiance*.
+*Irradiance is the amount of incoming power being recieved by the surface per unit area. Radiance is the amount of outgoing power leaving the surface per unit solid angle per unit area.
+
 Direction = R^2
 Wavelength = R+
 BRDF : Direction -> Direction -> Wavelength -> R>=0
