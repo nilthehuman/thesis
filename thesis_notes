@@ -36,7 +36,7 @@ A dolgozathoz tartozik egy egyszerű C++ nyelvű bemutató alkalmazás, valamint
 Global illumination — the physically accurate simulation of light transport in a virtual world — is an infamously computationally intensive problem. Ever since the need arose to render realistic 3D virtual scenes and since the publication of the rendering equation[Kajiya] in the 1980's people have been looking for efficient ways to cope with the problem.
 Path tracing emerged as the most successful attempt and became a pivotal algorithm in global illumination and all of computer graphics. Its simplicity and uncompromising physically based nature give it an almost unrivaled degree of reliability and accuracy while still being relatively easy to implement. In fact path tracing is still the gold standard by which other unbiased* rendering algorithms are judged today.
 
-Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise and speed — two sides of the same coin — remain essentially unsolved issues in the field.
+Yet even after significant theoretical progress and a thousandfold increase in the processing power of a typical personal computer since Immel and Kajiya's original papers were released, some problems have still not been overcome. Noise** and speed — two sides of the same coin — remain essentially unsolved issues in the field.
 Serious effort has gone into developing GPU accelerated near-real-time path tracer applications with impressive results[n] as well as highly effective noise reduction strategies (see 1.7.).
 Still the only kind of project utilizing real-time path tracing is little proof-of-concept games.[x][y][z]
 
@@ -54,7 +54,7 @@ An appendix of example output images is found at the end.
 The complete source code of both demonstrative applications is made available on GitHub. The path tracing reference program is called Retra (for "reference tracer"), the original rendering program is called Silence.
 
 *Rendering procedures converge to a certain limit point in the space of possible images. The limit depends on both the input and the algorithm's own properties. If the limit is equal to the physically expected solution for any input the algorithm is called unbiased; if not, it is biased.
-*Noise means the visible "graininess" of an output image rendered with path tracing. It is a result of random sampling every time a ray hits a diffuse surface.
+**Noise means the visible "graininess" of an output image rendered with path tracing. It is a result of random sampling every time a ray hits a diffuse surface.
 
 
 
@@ -94,7 +94,8 @@ Ray = (Triplet, Triplet, RGB)
 
 We have established that when undisturbed a ray will travel along a straight line. What happens when there is something in the way?
 
-*Intensity means the amount of power carried by the ray.
+*Intensity basically means the amount of power carried by the ray. The definition of intensity requires division by the surface area struck and we have said that rays have no finite thickness. "Energy" should be more proper but the term "intensity" is nevertheless more commonly used.
+**Red, green and blue are traditionally chosen for biological reasons. There is nothing special about these wavelengths in a physical sense.
 
 1.2. Light-Material Interaction
 
