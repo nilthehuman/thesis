@@ -176,13 +176,13 @@ pathtrace( *world*, *camera*, *s*, *d* )
 				ray.paint( color of intersected surface )
 				if intersected surface...
 					reflects diffusely:
-						dampen ray color by amount of diffuse reflectance
+						dampen ray to amount of diffuse reflectance
 						continue in random direction
 					reflects specularly:
-						dampen ray color by amount of specular reflectance
+						dampen ray to amount of specular reflectance
 						continue in mirror direction
 					refracts:
-						dampen ray color by amount of transmission
+						dampen ray to amount of transmission
 						continue in refracted direction
 		pixel.color = average of resulting ray colors
 	return pixels
