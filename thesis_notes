@@ -308,7 +308,7 @@ A major benefit to the zone forest in phase two is that it unambiguously "guides
 
 2.x. Technical Details and A Few Tricks
 
-Both algorithms are implemented purely on the CPU. Silence is only a proof of concept: a demonstration of the algorithm's promise. In fact both the clarity of the source code and the merits of the whole zone tracing concept would have suffered from a GPU implementation.
+Both algorithms are implemented purely on the CPU. Silence is only a proof of concept: a demonstration of the algorithm's promise. In fact both the clarity of the source code and the merits of the whole zone tracing concept would have suffered from a graphics processor implementation.
 As Professor Szirmay-Kalos reckoned "if it's not worth doing on the CPU, it's not worth doing on the GPU either". Since the algorithm is easy to parallelize we can expect fair results from an eventual GPU "zone tracer" as well.
 
 C++ was chosen as the language of implementation because it has long been the lingua franca of the computer graphics community as well as a language almost universally understood among working software developers. It also compiles to relatively efficient executables.
