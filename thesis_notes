@@ -167,11 +167,11 @@ pathtrace( *world*, *camera*, *s*, *d* )
 			shoot a *ray* from camera.viewpoint through the pixel
 			while 0 < ray.intensity and ray.depth++ <= d:
 				find nearest intersected *surface*
-				if *light* hit:
-					ray.paint( color of light )
-					break
 				if no surface hit:
 					ray.paint( color of sky )
+					break
+				if surface is a light:
+					ray.paint( color of light )
 					break
 				ray.paint( color of intersected surface )
 				if intersected surface...
