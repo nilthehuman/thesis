@@ -354,8 +354,8 @@ The complications arising from refractive objects being inside one another (such
 Whether or not minor hacks like these are appropriate for the scene being processed could be decided algorithmically in a smarter, more advanced implementation.
 
 Classes and Their Responsibilities
-No serious software engineering thesis can be complete without a dull discussion of the concrete class hierarchy used in the applications.
-Since it adds virtually nothing of value to the rest of the thesis the reader may safely skip this part entirely unless they are here for some mediocre Object-Oriented software design.
+No serious software engineering thesis can be complete without an uninteresting discussion of the concrete class hierarchy used in the applications and some UML.
+Since it adds virtually nothing of value to the rest of the thesis the reader may safely skip this part entirely unless they are here exactly for some mediocre Object-Oriented software design.
 
 2.x+1.
 
