@@ -540,6 +540,7 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 [] C. Crassin, F. Neyret, M. Sainz, S. Green, E. Eisemann: Interactive Indirect Illumination Using Voxel Cone Tracing, 2011. (Proceedings of Pacific Graphics 2011)
 [] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
 [] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing, 2007. (Proceedings of Graphics Interface 2007)
+[] M. Pellegrini: Ray-Shooting on Triangles in 3-Dimensional Space, 1993. (Algorithmica 9)
 [] https://en.wikipedia.org/wiki/Spectral_rendering
 [] https://en.wikipedia.org/wiki/Lambertian_reflectance
 [] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
