@@ -58,16 +58,7 @@ The complete source code of both demonstrative applications is made available on
 
 1. A Brief Overview of Conventional Path Tracing
 
-A quick review of the classic path tracing* algorithm follows after establishing a basic theoretical framework. The same framework shall be used in Chapter Two. No prior knowledge of the algorithm is assumed. The chapter is broken down into the following sections:
-
-1.1. The Lighting Model
-1.2. Light-Material Interaction
-1.3. The Camera Model
-1.4. The Core Algorithm
-1.5. Variants of the Core Algorithm
-1.6. Spatial Acceleration Structures
-1.7. Strategies to Reduce Noise
-1.8. Other Algorithms
+A quick review of the classic path tracing* algorithm follows after establishing a basic theoretical framework. The same framework shall be used in Chapter Two. No prior knowledge of the algorithm is assumed. The chapter is broken down into logical sections that progressively build on top of each other. Readers well versed in the theory of physically based rendering may feel free to skip this chapter.
 
 *There is some confusion over the name of the algorithm: some sources call it "(recursive) ray tracing" or "Whitted ray tracing", others "path tracing", yet others just "the Monte Carlo algorithm" even though that term is somewhat ambiguous. We shall use the name "path tracing" throughout the thesis.
 
@@ -184,6 +175,7 @@ pathtrace( *world*, *camera*, *s*, *d* )
 					refracts:
 						dampen ray to amount of transmission
 						continue in refracted direction
+			ray.color = (0, 0, 0)
 		pixel.color = average of resulting ray colors
 	return pixels
 
@@ -236,6 +228,8 @@ Path tracing is of course not without competition on the realistic image synthes
 * and voxel cone tracing, which divides the virtual space up into small cubes and uses a variant of ray tracing to sample it.
 
 These methods are very far removed from our immediate topic though and we shall discuss them no further.
+
+(A Lot More to Follow...)
 
 2. Introducing the New Algorithm
 
