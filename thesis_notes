@@ -337,9 +337,9 @@ where alpha is the angle between
 I is the light intensity arriving to the point on the wall at angle alpha,
 I0 is the initial 
 
-Recruiting some help from WolframAlpha reveals that this function peaks at alpha=pi/6, so that is the angle the best lit point is going to be found at.
+Recruiting WolframAlpha reveals that this function peaks at alpha=pi/6, so that is the angle the best lit point is going to be found at.
 
-Another example of molding the program into what works in practice is "reflect-to-diffuse truncation". The effect of light reflected off a mirror or metallic object to a diffuse surface is usually barely visible to the naked eye. During phase one if a diffuse surface is hit after a reflecting surface, Silence takes to liberty to stop expanding the tree after that node altogether.
+Another example of molding the program into what works best in practice is "reflect-to-diffuse truncation". The effect of light reflected off a mirror or metallic object to a diffuse surface is usually barely visible to the naked eye. During phase one if a diffuse surface is hit after a reflecting surface, Silence takes to liberty to stop expanding the tree after that node altogether.
 The rare cases where a reflective surface does change the illumination of a diffuse surface in a visible way are thus handled incorrectly, or more precisely, not handled at all. Metal rings placed on a flat diffuse surface are a famous example of this effect.
 Note that no truncation is allowed after refractive surfaces because they often produce very apparent caustics.
 
@@ -348,7 +348,7 @@ The complications arising from refractive objects being inside one another (such
 Whether or not minor hacks like these are appropriate for the scene being processed could be decided algorithmically in a smarter, more advanced implementation.
 
 Classes and Their Responsibilities
-No serious software engineering thesis can be complete without an uninteresting discussion of the concrete class hierarchy used in the applications and some UML.
+No serious software engineering thesis can be complete without an uninteresting discussion of the concrete class hierarchy used in the applications and some UML. The program analyzed is Silence because it is the main focus of the thesis.
 Since it adds virtually nothing of value to the rest of the thesis the reader may safely skip this part entirely unless they are here exactly for some mediocre Object-Oriented software design.
 
 2.x+1.
@@ -363,22 +363,13 @@ For
 + Clean and natural separation of light tree levels or "bounces" -> easy to test and debug
 + Versatile "acceleration structure", can be used with different algorithms
 Against
-- Marginal extra coding effort
+- Extra development effort
 - Some optimizations will compromise unbiased results (see Reflect-to-Diffuse Truncation)
 
 
 3. Comparison
 
-3.1. General Features
-Naive Path Tracing | Path Tracing with Zones
- unbiased  potentially unbiased
-codebase metrics --
-LOC
-Cyclomatic complexity
-performance --
-intersection tests
-
-3.2. Empirical Results
+3.1. Empirical Results
 
 On a logarithmic scale the new method appears to almost split the difference in terms of performance between direct rasterization and vanilla path tracing. "Zone tracing" is about two orders of magnitude faster than plain path tracing depending on the exact scene being rendered.
 This chapter includes some practical performance measurements done with both Retra and Silence side by side. Test cases that took a very long time were run once while easier cases were repeated three times each and the results averaged. All measurements were done on a laptop with the following specs:
@@ -389,27 +380,58 @@ Operating System: Debian GNU/Linux 8 "Jessie"
 
 The reason for including display specs is the fact that stochastic noise in path traced output makes the two algorithms non-trivial to compare. The author used his best judgement to determine when an image has converged enough to be very hard to tell from the actual solution at no zoom.
 
-The test cases are small, closed scenes with simple geometry described in human-readable JSON format. A built-in scene file parser is included with both rendering programs.
+The test cases are small, closed scenes made up of spheres, planes and triangles described in human-readable JSON format. A built-in scene file parser is included with both rendering programs.
+
+Since even Retra can produce direct illumination (more precisely an image with a single bounce) in less than a second we expect direct illumination to be extremely fast in Silence.
 
 [ picture ]  [ picture ]
 
-The difference in efficiency is more apparent when we allow each program only a limited number of paths to work with ("samples per pixel" is not really applicable to Silence). The following images were produced using a maximum of one million individual paths each (note that this does not include shadow rays: Retra is allowed to sample lights for free and its SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
+The difference in efficiency is more dramatic when we allow each program only a limited number of paths to work with ("samples per pixel" is not really applicable to Silence). The following images were produced using a maximum of one million individual paths each (note that this does not include shadow rays: Retra is allowed to sample lights for free and its SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
 
 [ picture ]  [ picture ]
 
 Silence is able to make better use of the drastically limited resources because its sampling method is much less random. The zone tree guides the rays towards the areas where most of the light is actually coming from and minimizes the overhead caused by producing useless paths of no interest.
+The extra information about the intensity distribution of zones speeds up shading considerably.
 Retra also took more time than Silence to render the scenes. (true?)
+
+n? million paths was enough to complete the full render k bounces deep without compromise.
 
 Typical global illumination effects such as color bleeding and soft shadows are visible in the test case images.
 
 A miniature animation subsystem is also included for demonstration purposes. Basic trajectories or "motions" for in-worlds objects are defined in a JSON file similar to scene descriptions (see scenes/dancingLights_motions.json for an easy example).
+
+3.2. General Features
+
+The following table summarizes the key differences between the two algorithms both in terms of theoretical capabilities and practical performance as measured.
+
+Naive Path Tracing | Path Tracing with Zones
+correctness
+ unbiased      | potentially unbiased
+generality
+ perfectly g.  | simple geometry (for now)
+algorithmic complexity --
+time complexity (as implemented)
+ O(psdn)       | O(pdn)
+time complexity (theoretical)
+ O(psd(log n))[Pellegrini] | unknown
+codebase metrics --
+LOC
+Cyclomatic complexity
+practical performance --
+intersection tests
+(scene 1)
+(scene 2)
+(scene 3)
+rendering time
+(scene 1)
+(scene 2)
+(scene 3)
 
 4. Assessment of Work and Results
 
 4.1. Points of Design
 
 The author made a decision early on during the development of Retra to stick to the old C++98 standard, a choice he now regrets. For instance the awkwardness of the old "time.h" library in a multithreaded environment definitely outweighs any portability concerns. The far superior and more reliable "chrono" C++11 library is recommended instead.
-The author even abandoned his goal to constrain the application to the C++98 featureset altogether in the end when he decided to use the "atomic" library for counting individual paths.
 All in all we have to conclude that choosing to use old standards and libraries for increased compiler compatibility and portability is a bad idea.
 
 With this in mind Silence was developed as a C++11 application from the beginning. The author experienced no issues whatsoever with the C++11 support of the popular g++ compiler (part of the GNU Compiler Collection).
@@ -423,7 +445,7 @@ The author is fairly satisfied with the design and code quality of Retra, but le
 Some would say that using simplistic test cases fails to demonstrate the potential of an algorithm. The author respectfully disagrees. The sparse, simple and easy-to-edit scenes used in this thesis proved quite enough to highlight the differences between the traditional and the modified algorithm.
 The thesis mixes set theory and type theory notation to convey the types of data and functions in a really informal way. This is done to give an immediate, intuitive and clear idea of each type and function. After a check from the supervisor it was concluded that this is acceptable. (?)
 The author wishes he knew more GIMP or some other image editor application. Illustrations are quite lacking in the thesis.
-The author also realizes that textual formats like TeX are superior to binary document formats but he chose not to learn TeX for fear of using up too much time.
+The author also realizes that textual formats like TeX are superior to binary document formats but he chose not to learn TeX for fear of using up too much time. No praise can be given to the bug-ridden and unreliable LibreOffice though.
 The discussions of both traditional and modified path tracing were composed with the reader in mind and an honest attention to detail. It is the author's sincerest hope that the thesis is of real value and that readers will feel they gained something from it.
 
 4.3. Findings
