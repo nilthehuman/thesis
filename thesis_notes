@@ -461,7 +461,7 @@ Keeping in mind that Silence is an extremely crude and primitive first attempt a
 
 Quite naturally the bulk of the rendering time is still spent on finding ray-surface intersections.
 
-We have seen that one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 fps in comparable quality without breaking a sweat.
+We have seen that circa one million rays is enough for Silence, a basic pure-CPU implementation to produce renders of acceptable, even enjoyable, quality. 30 million rays a second is well within what a modern high-performance GPU-accelerated rendering engine can manage, which means such an engine should be able to render these scenes at 30 FPS in comparable quality without breaking a sweat.
 
 Some ubiquitous techniques were surprisingly hard to find solid sources on. One would expect seminal papers to turn up on the first page of a simple Google search for terms like "Whitted ray tracing" or "Russian roulette". One would be wrong.
 
