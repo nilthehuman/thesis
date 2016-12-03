@@ -387,7 +387,7 @@ Since even Retra can produce direct illumination (more precisely an image with a
 
 [ picture ]  [ picture ]
 
-The difference in efficiency is more dramatic when we allow each program only a limited number of paths to work with ("samples per pixel" is not really applicable to Silence). The following images were produced using a maximum of one million individual paths each (note that this does not include shadow rays: Retra is allowed to sample lights for free and its SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
+The difference in efficiency is more dramatic when we allow each program only a limited number of paths to work with ("samples per pixel" is not really applicable to Silence). The following images were produced using a maximum of 2^20 (a little over one million) individual paths each (note that this does not include shadow rays: Retra is allowed to sample lights for free and its SHADOWRAYS constant is turned up to 16, not that it matters too much). The difference in visual quality is striking.
 
 [ picture ]  [ picture ]
 
