@@ -528,43 +528,43 @@ The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos 
 He also expresses his admiration of whatever or whomever spawned the physical reality that would in turn spawn living beings who would venture to imitate the very physical world they were born of as they saw it. The author, for one, could never have come up with such a wonderful thing.
 
 8. References
-[1] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
-[2] D. S. Immel, M. F. Cohen, D. P. Greenberg: A Radiosity Method for Non-Diffuse Environments, 1986. (SIGGRAPH '86)
-[3] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
-[4] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
-[] M. Radziszewski, K. Boryczko, W. Alda: An Improved Technique for Full Spectral Rendering, 2009. (Journal of WSCG 17.)
-[] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
-[] F. Nicodemus: Directional Reflectance and Emissivity of an Opaque Surface, 1965. (Applied Optics)
-[] T. Möller, B. Trumbore: Fast, Minimum Storage Ray/Triangle Intersection, 1997. (Journal of Graphics Tools)
-[] E. Veach, L. J. Guibas: Optimally Combining Sampling Techniques for Monte Carlo Rendering, 1995. (SIGGRAPH '95)
-[] M. Ragheb: Russian Roulette and Particle Splitting, lecture notes, 2013. http://mragheb.com/NPRE%20498MC%20Monte%20Carlo%20Simulations%20in%20Engineering/Russian%20Roulette%20and%20Particle%20Splitting.pdf
-[] E. Veach, L. J. Guibas: Metropolis Light Transport, 1997. (SIGGRAPH '97)
-[] E. P. Lafortune, Y. D. Willems: Bi-Directional Path Tracing, 1993. (COMPUGRAPHICS '93)
-[] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
-[] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
-[] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise, 2015. (SIGGRAPH '15)  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
-[] H. W. Jensen: Global Illumination using Photon Maps, 1996. (Rendering Techniques '96) http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
-[] C. M. Goral, K. E. Torrance, D. P. Greenberg, B. Battaile: Modeling the Interaction of Light Between Diffuse Surfaces, 1984. (Computer Graphics 18.)
-[] C. Crassin, F. Neyret, M. Sainz, S. Green, E. Eisemann: Interactive Indirect Illumination Using Voxel Cone Tracing, 2011. (Proceedings of Pacific Graphics 2011)
-[] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
-[] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing, 2007. (Proceedings of Graphics Interface 2007)
-[] M. Pellegrini: Ray-Shooting on Triangles in 3-Dimensional Space, 1993. (Algorithmica 9)
-[] https://en.wikipedia.org/wiki/Spectral_rendering
-[] https://en.wikipedia.org/wiki/Lambertian_reflectance
-[] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
-[] https://en.wikipedia.org/wiki/Saturable_absorption
-[] https://en.wikipedia.org/wiki/Superposition_principle
-[] https://en.wikipedia.org/wiki/Lambert%27s_cosine_law
-[] https://en.wikipedia.org/wiki/Snell%27s_law
-[] https://en.wikipedia.org/wiki/Hidden_surface_determination
-[] https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
-[] http://stats.stackexchange.com/questions/7977/how-to-generate-uniformly-distributed-points-on-the-surface-of-the-3-d-unit-sphere
-[n] The Brigade real-time path tracer engine, https://home.otoy.com/render/brigade/
-[s] http://www.hakenberg.de/diffgeo/special_relativity.htm
-[x] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
-[y] L. Dymchenko: AntiPlanet http://www.virtualray.ru/eng/download.html
-[z] E. Biddulph: Quake 2 Realtime GPU Pathtracing http://amietia.com/q2pt.html
-[998] https://github.com/nilthehuman/Retra
-[999] https://github.com/nilthehuman/Silence
+[used] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
+[used] D. S. Immel, M. F. Cohen, D. P. Greenberg: A Radiosity Method for Non-Diffuse Environments, 1986. (SIGGRAPH '86)
+[used] J. Kajiya: The Rendering Equation, 1986. (SIGGRAPH '86)
+[used] R. L. Cook: Stochastic Sampling in Computer Graphics, 1986. (Transactions on Graphics 5) http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/cook86_sampling.pdf
+[used] M. Radziszewski, K. Boryczko, W. Alda: An Improved Technique for Full Spectral Rendering, 2009. (Journal of WSCG 17.)
+[used] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
+[used] F. Nicodemus: Directional Reflectance and Emissivity of an Opaque Surface, 1965. (Applied Optics)
+[used] T. Möller, B. Trumbore: Fast, Minimum Storage Ray/Triangle Intersection, 1997. (Journal of Graphics Tools)
+[used] E. Veach, L. J. Guibas: Optimally Combining Sampling Techniques for Monte Carlo Rendering, 1995. (SIGGRAPH '95)
+[used] M. Ragheb: Russian Roulette and Particle Splitting, lecture notes, 2013. http://mragheb.com/NPRE%20498MC%20Monte%20Carlo%20Simulations%20in%20Engineering/Russian%20Roulette%20and%20Particle%20Splitting.pdf
+[used] E. Veach, L. J. Guibas: Metropolis Light Transport, 1997. (SIGGRAPH '97)
+[used] E. P. Lafortune, Y. D. Willems: Bi-Directional Path Tracing, 1993. (COMPUGRAPHICS '93)
+[used] F. Rousselle, C. Knaus, M. Zwicker: Adaptive sampling and reconstruction using greedy error minimization, 2011. (Proceedings of the 2011 SIGGRAPH Asia Conference)
+[used] P. Sen, S. Darabi: On filtering the noise from the random parameters in Monte Carlo rendering, 2012. (ACM Transactions on Graphics 31)
+[used] N. Kalantari, S. Bako, P. Sen: A Machine Learning Approach for Filtering Monte Carlo Noise, 2015. (SIGGRAPH '15)  http://cvc.ucsb.edu/graphics/Papers/SIGGRAPH2015_LBF/
+[used] H. W. Jensen: Global Illumination using Photon Maps, 1996. (Rendering Techniques '96) http://graphics.ucsd.edu/~henrik/papers/photon_map/global_illumination_using_photon_maps_egwr96.pdf
+[used] C. M. Goral, K. E. Torrance, D. P. Greenberg, B. Battaile: Modeling the Interaction of Light Between Diffuse Surfaces, 1984. (Computer Graphics 18.)
+[used] C. Crassin, F. Neyret, M. Sainz, S. Green, E. Eisemann: Interactive Indirect Illumination Using Voxel Cone Tracing, 2011. (Proceedings of Pacific Graphics 2011)
+[x] Ch. Buckalew, D. Fussell: Illumination Networks: Fast Realistic Rendering with General Reflectance Functions, 1989.  http://www0.cs.ucl.ac.uk/research/vr/Projects/VLF/vlfpapers/gi/buckalew__illumination_networks__siggraph89.pdf
+[x] S. Boulos, D. Edwards, J. D. Lacewell, J. Kniss, J. Kautz, P. Shirley, I. Wald: Packet-Based Whitted and Distribution Ray Tracing, 2007. (Proceedings of Graphics Interface 2007)
+[x] M. Pellegrini: Ray-Shooting on Triangles in 3-Dimensional Space, 1993. (Algorithmica 9)
+[used] https://en.wikipedia.org/wiki/Spectral_rendering
+[used] https://en.wikipedia.org/wiki/Lambertian_reflectance
+[used] https://en.wikipedia.org/wiki/Helmholtz_reciprocity
+[used] https://en.wikipedia.org/wiki/Saturable_absorption
+[used] https://en.wikipedia.org/wiki/Superposition_principle
+[used] https://en.wikipedia.org/wiki/Lambert%27s_cosine_law
+[used] https://en.wikipedia.org/wiki/Snell%27s_law
+[used] https://en.wikipedia.org/wiki/Hidden_surface_determination
+[used] https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
+[used] http://stats.stackexchange.com/questions/7977/how-to-generate-uniformly-distributed-points-on-the-surface-of-the-3-d-unit-sphere
+[used] The Brigade real-time path tracer engine, https://home.otoy.com/render/brigade/
+[used] http://www.hakenberg.de/diffgeo/special_relativity.htm
+[used] D. Bucciarelli: Sfera https://code.google.com/archive/p/sfera/
+[used] L. Dymchenko: AntiPlanet http://www.virtualray.ru/eng/download.html
+[used] E. Biddulph: Quake 2 Realtime GPU Pathtracing http://amietia.com/q2pt.html
+[used] https://github.com/nilthehuman/Retra
+[used] https://github.com/nilthehuman/Silence
 
 9. Appendix
