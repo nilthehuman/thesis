@@ -447,8 +447,8 @@ rendering time (full)
 
 The author made a decision early on during the development of Retra to stick to the old C++98 standard, a choice he now regrets. For instance the awkwardness of the old "time.h" library in a multithreaded environment definitely outweighs any portability concerns. The far superior and more reliable "chrono" C++11 library is recommended instead.
 All in all we have to conclude that choosing to use old standards and libraries for increased compiler compatibility and portability is a bad idea.
-
 With this in mind Silence was developed as a C++11 application from the beginning. The author experienced no issues whatsoever with the C++11 support of the popular g++ compiler (part of the GNU Compiler Collection).
+It initially seemed that a compact custom file format for scene descriptions was going to be easier to use and more flexible than a third party importer library. Indeed it proved adequate for prototyping and demonstrating the algorithm but will no longer be viable in a more serious implementation.
 
 Adhering to Object-Oriented principles was of relative rather than absolute importance to the project, but not at all due to lack of conviction that a clean and rigorously organized codebase is just as important as results. The author needed to get Silence working quickly to meet the deadline.
 
