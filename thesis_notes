@@ -535,6 +535,7 @@ He also expresses his admiration of whatever or whomever spawned the physical re
 [] H. W. Jensen, S. R. Marschner, M. Levoy, P. Hanrahan: A Practical Model for Subsurface Light Transport, 2001. (SIGGRAPH '01) https://graphics.stanford.edu/papers/bssrdf/bssrdf.pdf
 [] F. Nicodemus: Directional Reflectance and Emissivity of an Opaque Surface, 1965. (Applied Optics)
 [] T. Möller, B. Trumbore: Fast, Minimum Storage Ray/Triangle Intersection, 1997. (Journal of Graphics Tools)
+[] E. Veach, L. J. Guibas: Optimally Combining Sampling Techniques for Monte Carlo Rendering, 1995. (SIGGRAPH '95)
 [] M. Ragheb: Russian Roulette and Particle Splitting, lecture notes, 2013. http://mragheb.com/NPRE%20498MC%20Monte%20Carlo%20Simulations%20in%20Engineering/Russian%20Roulette%20and%20Particle%20Splitting.pdf
 [] E. Veach, L. J. Guibas: Metropolis Light Transport, 1997. (SIGGRAPH '97)
 [] E. P. Lafortune, Y. D. Willems: Bi-Directional Path Tracing, 1993. (COMPUGRAPHICS '93)
