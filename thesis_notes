@@ -477,6 +477,7 @@ Silence, a basic toy implementation of the new method comes with a lengthy todo 
     Weak and unimportant zones that contribute little to the final image soak up most of the processing effort. Static limit cutoff is too primitive to combat this issue effectively.
 * Are pivots even necessary?
     In retrospect it seems that pivot rays are a rather useless component of zones. We can go ahead and use pivotless zones instead.
+* Use a third party scene loader library like assimp.
 * Import/Export Zone trees to/from file.
     Large static scenes may benefit from this.
 * Develop a GPU accelerated version (expected to be several orders of magnitude faster).
