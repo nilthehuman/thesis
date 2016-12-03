@@ -291,6 +291,10 @@ The resulting zone tree captures virtually all light transport happening in the 
 Another way to think about the Zone tree is as the simplest and most straightforward of all acceleration structures: all it does is describe the sets of paths that end up being valuable in the raytracing/rasterization phase.
 Tracing is then limited to only those paths that actually connect the camera with a lightsource basically leading to a particularly effective and flexible form of importance sampling.
 
+2.4.1. Phase Two
+
+In this preliminary proof-of-concept version of the algorithm we shall abandon complete fidelity to physical reality. Although a physically correct and unbiased algorithm may well emerge once all the rough edges have been rounded off, for now issues such as conservation of energy are left to another time to be solved.
+
 The author has tried two different rasterization strategies:
 
 1. Zone by Zone: For each Zone see if it hits the camera. If it does shoot one Ray through each pixel of the 2D bounding box of its source to determine the Zone's contribution to the color of the pixel.
@@ -302,6 +306,7 @@ The latter strategy has won in terms of performance by a wide margin. (?) It is 
 Only the pixel by pixel strategy is used hereafter. Both strategies are still available in the codebase for experimentation.
 
 A major benefit to the zone forest in phase two is that it unambiguously "guides" the eye rays back to the corresponding light source. We don't need to work out the next surface the ray hits because we already know where the light is coming from.
+Instead of shooting shadow rays to test the visibility of lightsources phase two relies on the intelligence acquired about shadows in phase one.
 
 2.x. Technical Details and A Few Tricks
 
