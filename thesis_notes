@@ -415,6 +415,8 @@ time complexity (as implemented)
  O(psdn)       | O(pdn)
 time complexity (theoretical)
  O(psd(log n))[Pellegrini] | unknown
+storage complexity (as implemented)*
+ ???
 codebase metrics --
 LOC
 Cyclomatic complexity
@@ -427,6 +429,8 @@ rendering time
 (scene 1)
 (scene 2)
 (scene 3)
+
+*Today computer memory is cheap and abundant, so storage complexity is of little practical consequence.
 
 4. Assessment of Work and Results
 
