@@ -233,7 +233,7 @@ These methods are very far removed from our immediate topic though and we shall 
 
 2. Introducing the New Algorithm
 
-A significant part of Chapter One was devoted to discussing noise and the different ways to cope with it. Rather than developing complicated methods to isolate and reduce noise we can also try and avoid incurring noise in the first place. The program in this thesis attempts to take the latter approach — hence the name "Silence".
+A significant part of Chapter One was devoted to discussing noise and the different ways to cope with it. Rather than developing complicated methods to isolate and reduce noise we can also try and avoid incurring noise in the first place. The program in this thesis attempts to take the latter approach.
 
 Describing the low-level implementation details of the rendering program would make for a boring read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
 Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own "zone tracer" application. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
