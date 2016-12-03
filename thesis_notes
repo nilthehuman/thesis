@@ -244,6 +244,9 @@ The title of the thesis is something of a misnomer in that zones are only loosel
 
 The motivation for a new data structure stems from the realization that in most input scenes with simple geometry direct irradiance is at least partially "trivial" or "obvious".
 
+[ picture ]
+Figure 2.1: A typical scenario
+
 going to appear in the shades of red according to some well-behaved, smooth function I(p), shadows notwithstanding. Any person intuitively knows this and not because we are deeply attuned to the nature of light; the solution really is trivial so there must be a straightforward way to compute the illumination without expensive random sampling.
 
 2.2. What Are Zones?
