@@ -452,7 +452,7 @@ It initially seemed that a compact custom file format for scene descriptions was
 
 Adhering to Object-Oriented principles was of relative rather than absolute importance to the project, but not at all due to lack of conviction that a clean and rigorously organized codebase is just as important as results. The author needed to get Silence working quickly to meet the deadline.
 
-The author is fairly satisfied with the design and code quality of Retra, but less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
+The author is fairly satisfied with the design and overall code quality of Retra, but much less so with Silence. This is entirely the author's own fault: rushed work as the deadline drew closer did not help. The clearest, most valuable lesson from working on this thesis is that delaying work on your thesis until the last possible minute is inadvisable.
 
 4.2. Points of Demonstration
 
