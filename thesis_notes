@@ -235,8 +235,8 @@ These methods are very far removed from our immediate topic though and we shall 
 
 A significant part of Chapter One was devoted to discussing noise and the different ways to cope with it. Rather than developing complicated methods to isolate and reduce noise we can also try and avoid incurring noise in the first place. The program in this thesis attempts to take the latter approach.
 
-Describing the low-level implementation details of the rendering program would make for a boring read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
-Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own "zone tracer" application. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
+Describing the low-level implementation details of the rendering program would make for a dull read. Such technicalities are relegated to the "Technical Details and A Few Tricks" section at the end of this chapter.
+Instead the author shall focus on providing a high-level overview of the principles of the algorithm and the intuition behind them. By the time we are done the reader should be able to start implementing her own application based on the same principles. In fact the concepts are sufficiently simple and natural for even non-technical readers to follow along.
 
 The title of the thesis is something of a misnomer in that zones are only loosely related to ray packets but the method did not have a set name at the time nor did the author want to use a confusing nonsense title. Zones are a variant of ray packets in the sense that they both make use of ray coherence, all (hypothetical) rays originate at a common point and they both attempt to reduce the number of intersection tests needed for a high-quality render. See section 2.2. for details.
 
@@ -249,14 +249,17 @@ Figure 2.1: A typical scenario
 
 going to appear in the shades of red according to some well-behaved, smooth function I(p), shadows notwithstanding. Any person intuitively knows this and not because we are deeply attuned to the nature of light; the solution really is trivial so there must be a straightforward way to compute the illumination without expensive random sampling.
 
-2.2. What Are Zones?
+2.2. What Are Zones
 
-Zones are the algorithm's core data structure meant to capture the most crucial characteristics of a full bundle of light emanating from an emitter or reflector in all directions.
+Zones are the algorithm's core data structure. They are meant to capture the most crucial characteristics of a full bundle of light emanating from an emitter or reflector in all directions.
+A zone must convey the following information:...
 Conceptually a zone represents an infinite number of light rays traveling from a given surface to other nearby surfaces or to a camera.
 
 The purposes of zones are twofold:
-First, to determine in one sweep the direct illumination of linear surfaces, e.g. the shading of the flat wall lit by a nearby light discussed in the previous section;
-and second, to establish the set of paths that eye rays can potentially take, and crucially, those they cannot, e.g. if two back-culled triangles are facing away from each other any path that would travel directly between those two triangles must be invalid.
+* First, to determine in one sweep the direct illumination of linear surfaces, e.g. the shading of the flat wall lit by a nearby light discussed in the previous section;
+* and second, to establish the set of paths that eye rays can potentially take, and crucially, those they cannot. E.g. if two back-culled triangles are facing away from each other any path that would travel directly between those two triangles must be invalid.
+
+Each lightsource begets a separate zone tree.
 
 2.3. Alternatives
 
@@ -264,7 +267,9 @@ Zones are not entirely unlike traditional 3D rendering data structures such as b
 
 The model also bears a resemblance to illumination networks [Buckalew&Fussell] although it tries to reduce the number of ray-surface intersection tests even further.
 
-2.4. Overview of The Algorithm
+The idea of constructing potential light paths from the lightsources and then producing an image with eye ray tracing also recalls bidirectional path tracing.
+
+2.4. Outline of The Algorithm
 
 The algorithm operates in two phases:
 * phase one: building the zone forest, and
@@ -272,7 +277,12 @@ The algorithm operates in two phases:
 In phase one the algorithm extracts information from the scene about the potential future eye ray paths.
 The rendering algorithm in phase two is informed by the intelligence acquired about the scene in phase one.
 
+[ pseudocode ]
+
 The bulk of the processing effort is made in phase two. Phase two typically takes several orders of magnitude longer than phase one.
+
+The zones, and consequently, the zone tree contains many useless, invalid paths as well. The point is that no valid path gets /left out/: if a path from the camera to a lightsource is valid then it must travel inside one of the branches of the zone forest.
+[ picture of trace ]
 
 2.4.1. Phase One
 
@@ -283,7 +293,7 @@ In phase one area lightsources are treated almost the same as point lights.
 Phase one traces infinite sets of *light* rays as opposed to *eye* rays, i.e. it traces light forward. This rare approach means we are willing to do some extra CPU work (exactly how much strongly depends on the scene being rendered) to get a complete picture of all the light transport happening in the scene. If done right forward light tracing nets us the following advantages:
 + Decoupling of light transport and camera position. A dynamic camera is not a problem, multiple cameras are cheap
 + Easy shadows, no shadow rays ("shadow zones") necessary
-+ Efficient caustics
++ Possibly cheaper caustics
     Surface points whence shadow rays are blocked by see-through objects are hard to deal with in path tracing. The zone tree "guides" the sampling rays through the refractive object instead of shooting rays blindly in all directions.
 
 The resulting zone tree captures virtually all light transport happening in the scene up to a given number of bounces.
@@ -302,7 +312,7 @@ The problem with this strategy is, of course, the exponentially increasing numbe
 
 2. Pixel by Pixel: Shoot one Ray through each pixel of the screen to see what surface it hits. Look up all the Zones emanating from that surface (bounding boxes help). Add up their contributions to the color of the pixel.
 
-The latter strategy has won in terms of performance by a wide margin. (?) It is even easier to parallelize and requires even less intersections to be calculated.
+The latter strategy has won in terms of performance by a wide margin. (?) It is even easier to parallelize and requires much less intersections to be calculated. "Zone by zone" will use exponentially more operations as the scene gets larger (has more objects in it) while "pixel by pixel" is actually sublinear.
 Only the pixel by pixel strategy is used hereafter. Both strategies are still available in the codebase for experimentation.
 
 A major benefit to the zone forest in phase two is that it unambiguously "guides" the eye rays back to the corresponding light source. We don't need to work out the next surface the ray hits because we already know where the light is coming from.
@@ -329,17 +339,29 @@ On the implementation level a zone is a class made up of the following component
 
 2.x.y. Intensity Distribution Functions Used
 
- In a serious implementation a more rigorous scientific approach is needed.
+ad-hoc distribution functions. In a serious implementation a more rigorous scientific approach is needed.
 
-When viewed from a large distance for all intents and purposes the triangular emitter works like a point light. We need a function that transitions smoothly from ... to point light behaviour.
+a) If the receiving surface is up close to the radiating surface we can assume it receives nearly the total intensity.
+b) If the receiving surface is far away from the radiating surface we can substitute a point light for the radiator and calculate the resulting intensity according to the inverse square law.
 
-The Material Model
+When viewed from a large distance for all intents and purposes the triangular emitter works like a point light. ...
+In order to transition smoothly from area light to point light behaviour we construct the following function:
+d(x) = (1-1/e^distance) * A + 1/e^distance * B
 
-combination of ideal BRDF's
+Shadows
+
+As of the submission of the thesis shadows do not work yet.
+This approach is uncomplicated and works reasonably well.
+For shading the penumbra an easy interpolation scheme can be used:
+[ shadow picture ]
+
+Depending on the complexity of the scene this approximation may run faster or slower than brute force light sampling by shadow rays.
+
+Note that even the simplest non-polygonal shape -- a sphere -- causes considerable difficulties.
 
 Input-Specific Optimizations
 
-Some implementation nuances were tailored a little bit to the particular kind of scenes used in testing. Consider the Cornell box scene: the side walls are at a right angle to the lightsource. Using 
+Some implementation nuances were tailored a little to the particular kind of scenes used in testing. This was done in order to show the viability of the algorithm. Consider the Cornell box scene: the side walls are at a right angle to the lightsource. Using 
 I(alpha) = I0 * sin(alpha) * cos^3(alpha) / d^2
 where alpha is the angle between 
 I is the light intensity arriving to the point on the wall at angle alpha,
@@ -356,15 +378,20 @@ The complications arising from refractive objects being inside one another (such
 Whether or not minor hacks like these are appropriate for the scene being processed could be decided algorithmically in a smarter, more advanced implementation.
 
 Classes and Their Responsibilities
-No serious software engineering thesis can be complete without an uninteresting discussion of the concrete class hierarchy used in the applications and some UML. The program analyzed is Silence because it is the main focus of the thesis.
-Since it adds virtually nothing of value to the rest of the thesis the reader may safely skip this part entirely unless they are here exactly for some mediocre Object-Oriented software design.
+No serious software engineering thesis can be complete without a mundane discussion of the concrete class hierarchy used in the applications and some UML. The program analyzed is Silence because it is the main focus of the thesis.
+Since it adds little value to the rest of the thesis the reader may safely skip this part entirely unless they are here exactly for some mediocre Object-Oriented software design.
 
-2.x+1.
+A manager class called Renderer is what conducts the whole rendering process. The /main/ function issues requests exclusively to a member of this class, it does not interact with zones and cameras directly.
+A Renderer is attached to a Scene. This architecture supports an arbitrary number of cameras in the same scene.
+
+2.x+1. Summary
+
+In general one will get the following gains and incur the following penalties for choosing a zone-based approach over naive path tracing.
 
 A Summary of the Advantages and Drawbacks of The New Approach
 For
 + Noise-free rendering
-+ Decoupling of light transport and camera position
++ Partial decoupling of light transport and camera position
 + Multiple cameras are cheaper
 + Degrades gracefully
     Under tight time constraints you can always fall back to rendering just the zones near the top of each tree.
@@ -372,23 +399,23 @@ For
 + Versatile "acceleration structure", can be used with different algorithms
 Against
 - Extra development effort
-- Some optimizations will compromise unbiased results (see Reflect-to-Diffuse Truncation)
+- Some optimizations will definitely compromise unbiased results (see Reflect-to-Diffuse Truncation)
 
 
 3. Comparison
 
 3.1. Empirical Results
 
-On a logarithmic scale the new method appears to almost split the difference in terms of performance between direct rasterization and vanilla path tracing. "Zone tracing" is about two orders of magnitude faster than plain path tracing depending on the exact scene being rendered.
 This chapter includes some practical performance measurements done with both Retra and Silence side by side. Test cases that took a very long time were run once while easier cases were repeated three times each and the results averaged. All measurements were done on a laptop with the following specs:
 Processor: Core i5-5200U running at 2.2 GHz (hyperthreading enabled)
 Memory: 4 GB of DDR3 RAM
 Display: 15.6" LED monitor, 1366x768 pixels with 466:1 contrast
 Operating System: Debian GNU/Linux 8 "Jessie"
-
 The reason for including display specs is the fact that stochastic noise in path traced output makes the two algorithms non-trivial to compare. The author used his best judgement to determine when an image has converged enough to be very hard to tell from the actual solution at no zoom.
 
+The performance tests are admittedly rather limited. Silence is still in alpha status so test cases had to be picked not to expose its deficiencies.
 The test cases are small, closed scenes made up of spheres, planes and triangles described in human-readable JSON format. A built-in scene file parser is included with both rendering programs.
+On a logarithmic scale the new method appears to almost split the difference in terms of performance between direct rasterization and vanilla path tracing. "Zone tracing" is about two orders of magnitude faster than plain path tracing depending on the exact scene being rendered.
 
 Since even Retra can produce direct illumination (more precisely an image with a single bounce) in less than a second we expect direct illumination to be extremely fast in Silence.
 
@@ -464,7 +491,7 @@ The discussions of both traditional and modified path tracing were composed with
 
 4.3. Findings
 
-The actual performance increase from the new method fell remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude). Silence beat the naive renderer Retra by about two orders of magnitude in most test cases depending on what level of output convergence we demand of the latter.
+The actual performance increase from the new method seems to fall remarkably close to what the author initially expected (a real surprise in an industry where serious estimates routinely fail by orders of magnitude). Silence should be able to beat the naive renderer Retra by about two orders of magnitude in most test cases depending on what level of output convergence we demand of the latter.
 
 Keeping in mind that Silence is an extremely crude and primitive first attempt at harnessing the model's power it is safe to expect more algorithmic and performance gains from a more sophisticated and well thought-out implementation.
 
@@ -478,15 +505,15 @@ Some ubiquitous techniques were surprisingly hard to find solid sources on. One 
 
 Silence, a basic toy implementation of the new method comes with a lengthy todo list.
 
-* Use smart interpolation across each surface to drastically reduce number of rays needed for rasterization.
+* Use smart interpolation across each surface (instead of sending rays pixel by pixel) to drastically reduce number of rays needed for rasterization.
 * Gather more geometric information during the tree building phase, e.g. detect impossible paths between entire groups of surfaces.
 * Handle true general BRDF's.
 * Handle more complex geometry (although the algorithm may turn out to be ill-suited for this).
 * Develop smarter ways to discard zones.
     Weak and unimportant zones that contribute little to the final image soak up most of the processing effort. Static limit cutoff is too primitive to combat this issue effectively.
 * Are pivots even necessary?
-    In retrospect it seems that pivot rays are a rather useless component of zones. We can go ahead and use pivotless zones instead.
-* Use a third party scene loader library like assimp.
+    In retrospect it seems that pivot rays are a rather useless component to zones. We could go ahead and use pivotless zones instead.
+* Use a third party scene loader library like assimp.[]
 * Import/Export Zone trees to/from file.
     Large static scenes may benefit from this.
 * Develop a GPU accelerated version (expected to be several orders of magnitude faster).
@@ -494,7 +521,7 @@ Silence, a basic toy implementation of the new method comes with a lengthy todo 
 6. Applicability
 
 Path tracing and related methods have traditionally been important in a number of fields. Novel algorithms are often incorporated into the tools used in these fields making life easier for both professionals and hobbyists.
-This chapter explores some possible use cases for 
+This chapter explores some possible use cases for the zone based algorithm if and when it reaches maturity.
 
 Acoustic Modeling
 Beam tracing[see ...] solutions have been used to model the behaviour of sound waves in closed spaces for years.
@@ -532,9 +559,8 @@ Mobile Platforms
 Zones may be a worthwhile addition to rendering systems running on such limited hardware.
 
 7. Acknowledgements
-The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos for his valuable remarks and to his own family and significant other for their patience and understanding in the final stages of development and writing.
+The author wishes to express his thanks to supervisor Dr László Szirmay-Kalos for his valuable remarks and encouragement and to his own family and significant other for their patience and understanding in the final stages of development and writing.
 Suggestions from Péter Hudák and Kornél Kálmán, graduates of BUTE, also helped improve this thesis.
-The author also expresses his admiration of whatever or whomever spawned the physical reality that would in turn spawn living beings who would venture to imitate the very physical world they were born of as they saw it. The author, for one, could never have come up with such a wonderful thing.
 
 8. References
 [used] T. Whitted: An Improved Illumination Model for Shaded Display, 1980. (Communications of the ACM 23(6))
@@ -579,3 +605,7 @@ The author also expresses his admiration of whatever or whomever spawned the phy
 [used] https://github.com/nilthehuman/Silence
 
 9. Appendix
+
+"demo.json" (direct illumination, no occlusion)
+
+Note that the ball on the left is not made of chrome or some other partly diffuse material, it's supposed to be a fully specular surface. The blur results from the lack of occlusion.
